@@ -1,0 +1,76 @@
+{
+  "name": "engram",
+  "displayName": "Engram",
+  "description": "Automatically store and retrieve meaningful code patterns locally.",
+  "version": "0.0.1",
+  "publisher": "engram-project",
+  "icon": "images/icon.png",
+  "engines": {
+    "vscode": "^1.96.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kwstx/codeStore"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "engram.helloWorld",
+        "title": "Hello World"
+      },
+      {
+        "command": "engram.search",
+        "title": "Engram: Find Similar Patterns"
+      },
+      {
+        "command": "engram.excludeFile",
+        "title": "Engram: Exclude this File"
+      },
+      {
+        "command": "engram.deleteMemory",
+        "title": "Engram: Delete Memory"
+      },
+      {
+        "command": "engram.forgetAiContext",
+        "title": "Engram: Forget AI Context for This File"
+      },
+      {
+        "command": "engram.toggleAiContext",
+        "title": "Engram: Toggle AI Context Capture (Enable/Disable)"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.96.0",
+    "@types/glob": "^8.1.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "20.x",
+    "@typescript-eslint/eslint-plugin": "^8.18.2",
+    "@typescript-eslint/parser": "^8.18.2",
+    "eslint": "^9.17.0",
+    "glob": "^8.1.0",
+    "mocha": "^11.0.1",
+    "typescript": "^5.7.2",
+    "@vscode/test-electron": "^2.4.1"
+  },
+  "dependencies": {
+    "uuid": "^11.0.4",
+    "vectordb": "^0.4.5",
+    "@xenova/transformers": "^2.14.0"
+  }
+}
