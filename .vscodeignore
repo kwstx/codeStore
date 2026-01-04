@@ -1,0 +1,12 @@
+.vscode/**
+.vscode-test/**
+out/test/**
+src/**
+.gitignore
+tsconfig.json
+vsc-extension-quickstart.md
+webpack.config.js
+node_modules/**
+!node_modules/uuid/**
+!node_modules/vectordb/**
+!node_modules/@xenova/**

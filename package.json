@@ -2,8 +2,9 @@
   "name": "engram",
   "displayName": "Engram",
   "description": "Automatically store and retrieve meaningful code patterns locally.",
-  "version": "0.0.1",
-  "publisher": "engram-project",
+  "readme": "README.md",
+  "version": "0.0.5",
+  "publisher": "use-engram",
   "icon": "images/icon.png",
   "engines": {
     "vscode": "^1.96.0"
