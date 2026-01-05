@@ -5,7 +5,10 @@ import { ExclusionManager } from './exclusions';
 import { Logger } from './logger';
 import { SessionStore } from './sessionStore';
 import { MistakeDetector } from './mistakeDetector';
+import { PasteDetector } from './pasteDetector';
 import { TimelineProvider } from './ui/TimelineProvider';
+
+import { MistakeCodeLensProvider } from './ui/MistakeCodeLensProvider';
 
 export async function activate(context: vscode.ExtensionContext) {
     const logger = Logger.getInstance();
@@ -35,6 +38,74 @@ export async function activate(context: vscode.ExtensionContext) {
         detector.init(path.join(context.globalStorageUri.fsPath, 'mistakes'));
     }
     detector.startListening(context);
+
+    // Start Paste Detection (Phase 3)
+    PasteDetector.getInstance().startListening(context);
+
+    // Register CodeLens Provider for Mistakes
+    const codeLensProvider = new MistakeCodeLensProvider();
+    context.subscriptions.push(
+        vscode.languages.registerCodeLensProvider({ scheme: 'file' }, codeLensProvider)
+    );
+
+    // Command: View Mistake Fix
+    let viewMistakeDisposable = vscode.commands.registerCommand('engram.viewMistakeFix', async (fingerprintId: string) => {
+        const fp = detector.getFingerprint(fingerprintId);
+        if (!fp) return;
+
+        // Prepare Actions
+        interface PickerItem extends vscode.QuickPickItem {
+            action: 'show' | 'dismiss';
+            fix?: any;
+        }
+
+        const items: PickerItem[] = [];
+
+        if (fp.fixes && fp.fixes.length > 0) {
+            fp.fixes.forEach(f => {
+                items.push({
+                    label: `$(wrench) View Fix: ${new Date(f.timestamp).toLocaleTimeString()}`,
+                    description: f.description,
+                    detail: f.diff.substring(0, 60) + '...',
+                    action: 'show',
+                    fix: f
+                });
+            });
+        } else {
+            items.push({
+                label: '$(info) No fixes recorded yet',
+                description: 'We are watching for how you fix this.',
+                action: 'show', // No-op really
+                fix: null,
+                picked: true // Disabled? No.
+            });
+        }
+
+        // Add Dismiss Option at bottom
+        items.push({
+            label: '$(bell-slash) Dismiss this warning',
+            description: 'Stop showing warnings for this specific mistake',
+            action: 'dismiss'
+        });
+
+        const selected = await vscode.window.showQuickPick(items, {
+            placeHolder: `Action for recurring mistake (${fp.count} occurrences)`
+        });
+
+        if (selected) {
+            if (selected.action === 'dismiss') {
+                await detector.ignoreMistake(fp.id);
+                vscode.window.showInformationMessage('Warning dismissed for this mistake pattern.');
+            } else if (selected.action === 'show' && selected.fix) {
+                const doc = await vscode.workspace.openTextDocument({
+                    content: selected.fix.diff,
+                    language: 'diff'
+                });
+                await vscode.window.showTextDocument(doc, { preview: true, viewColumn: vscode.ViewColumn.Beside });
+            }
+        }
+    });
+    context.subscriptions.push(viewMistakeDisposable);
 
     // Register Webview Provider
     const timelineProvider = new TimelineProvider(context.extensionUri, sessionStore);

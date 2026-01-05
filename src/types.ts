@@ -20,6 +20,13 @@ export interface VibeSession {
 
 export type DetectionMethod = 'regex' | 'diagnostic';
 
+export interface MistakeFix {
+    id: string;
+    description: string; // e.g., "Diff to resolve"
+    diff: string; // The specific change applied
+    timestamp: number;
+}
+
 export interface MistakeFingerprint {
     id: string; // Unique ID for the fingerprint
     language: string; // e.g., 'typescript', 'python', 'all'
@@ -28,4 +35,6 @@ export interface MistakeFingerprint {
     count: number; // Number of times observed
     fixContext?: string; // Optional: Link to fix or description
     lastSeen: number; // Timestamp
+    fixes?: MistakeFix[]; // List of recorded fixes
+    ignored?: boolean; // User manually dismissed this warning
 }
