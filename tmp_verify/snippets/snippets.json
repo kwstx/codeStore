@@ -1,0 +1,11 @@
+[
+  {
+    "id": "hash1",
+    "content": "console.log('hello')",
+    "normalized": "console.log('hello')",
+    "language": "js",
+    "origin": "paste",
+    "timestamp": 1767697225301,
+    "useCount": 1
+  }
+]

@@ -1,0 +1,9 @@
+[
+  {
+    "id": "no-eval|test.ts",
+    "ruleId": "no-eval",
+    "filePath": "test.ts",
+    "reason": "Reason",
+    "timestamp": 1767697225294
+  }
+]

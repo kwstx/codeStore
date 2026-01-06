@@ -94,12 +94,12 @@ export class SessionStore {
         try {
             const embedding = await EmbeddingService.getInstance().getEmbedding(content);
             const similar = await this.vectorStore.searchVibePrompts(embedding, 3);
-            
+
             // Check for failed prompts in results
             const failedMatch = similar.find((p: any) => p.status === 'failed' && p.sessionId !== session.id);
-            
+
             if (failedMatch) {
-               warning = `Warning: This prompt is similar to a previous failed attempt (Session ${failedMatch.sessionId.substring(0,8)}).`;
+                warning = `Warning: This prompt is similar to a previous failed attempt (Session ${failedMatch.sessionId.substring(0, 8)}).`;
             }
 
             // Save this new prompt to VectorStore for future checks
@@ -110,7 +110,7 @@ export class SessionStore {
                 sessionId: session.id,
                 status: session.status
             });
-            
+
         } catch (e) {
             console.error("Error in similarity check:", e);
         }
@@ -124,7 +124,7 @@ export class SessionStore {
 
         session.prompts.push(newVersion);
         await this.saveSession(session);
-        
+
         return warning;
     }
 
@@ -152,5 +152,17 @@ export class SessionStore {
             session.status = status;
             await this.saveSession(session);
         }
+    }
+
+    public getLastPromptInfo(): { sessionId: string, timestamp: number } | undefined {
+        if (!this.activeSessionId) return undefined;
+        const session = this.sessions.get(this.activeSessionId);
+        if (!session || session.prompts.length === 0) return undefined;
+
+        const lastPrompt = session.prompts[session.prompts.length - 1];
+        return {
+            sessionId: session.id,
+            timestamp: lastPrompt.timestamp
+        };
     }
 }

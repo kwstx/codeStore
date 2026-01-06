@@ -38,3 +38,22 @@ export interface MistakeFingerprint {
     fixes?: MistakeFix[]; // List of recorded fixes
     ignored?: boolean; // User manually dismissed this warning
 }
+
+export interface CodeSnippet {
+    id: string; // Hash of normalized content
+    content: string;
+    normalized: string;
+    language: string;
+    origin: 'paste' | 'generation' | 'unknown';
+    sessionId?: string; // If known
+    timestamp: number;
+    useCount: number;
+}
+
+export interface SecurityRule {
+    id: string;
+    language: string; // 'javascript', 'typescript', 'python', 'any'
+    pattern: string; // Regex string
+    risk: string;
+    alternative: string;
+}
