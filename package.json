@@ -1,9 +1,9 @@
 {
   "name": "engram",
   "displayName": "Engram",
-  "description": "Automatically store and retrieve meaningful code patterns locally.",
+  "description": "The gateway to code memory. Local-first semantic index and context retrieval.",
   "readme": "README.md",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "publisher": "use-engram",
   "icon": "images/icon.png",
   "engines": {
