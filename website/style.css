@@ -817,11 +817,22 @@ h1 {
 }
 
 /* Colored Shadow/Glow behind icons */
-/* Colored Shadow/Glow behind icons - REMOVED per request */
+/* Colored Shadow/Glow behind icons */
 .product-icon-container::before {
     content: '';
-    display: none;
-    /* Hidden */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    /* Reduced size */
+    height: 100%;
+    border-radius: 50%;
+    filter: blur(15px);
+    /* Reduced blur */
+    opacity: 0.3;
+    /* Subtle */
+    z-index: -1;
 }
 
 /* Card 1: Green/Blue (Local Privacy) */
