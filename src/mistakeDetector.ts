@@ -3,7 +3,7 @@ import * as crypto from 'crypto';
 import * as fs from 'fs';
 import * as path from 'path';
 import { v4 as uuidv4 } from 'uuid';
-import { MistakeFingerprint, MistakeFix } from './types';
+import { MistakeFingerprint, MistakeFix, MemoryCard } from './types';
 
 export class MistakeDetector {
     private static instance: MistakeDetector;
@@ -63,6 +63,18 @@ export class MistakeDetector {
 
     private async saveFingerprints() {
         if (!this.storagePath) return;
+
+        // Phase 9: Hardening - Eviction Policy
+        // If > 5000 fingerprints, evict oldest 1000 to prevent unbounded growth.
+        const MAX_FINGERPRINTS = 5000;
+        if (this.fingerprints.size > MAX_FINGERPRINTS) {
+            console.log(`[MistakeDetector] Pruning fingerprints (Size: ${this.fingerprints.size} > ${MAX_FINGERPRINTS})...`);
+            const sorted = Array.from(this.fingerprints.values()).sort((a, b) => a.lastSeen - b.lastSeen);
+            const toRemove = sorted.slice(0, this.fingerprints.size - MAX_FINGERPRINTS + 100); // Remove excess + buffer
+            toRemove.forEach(f => this.fingerprints.delete(f.id));
+            console.log(`[MistakeDetector] Evicted ${toRemove.length} old fingerprints.`);
+        }
+
         try {
             const list = Array.from(this.fingerprints.values());
             await fs.promises.writeFile(this.getFilePath(), JSON.stringify(list, null, 2), 'utf8');
@@ -119,9 +131,12 @@ export class MistakeDetector {
                         existing.count++;
                         existing.lastSeen = Date.now();
 
-                        // Step 5: Detect Repeated Mistakes
-                        // Fire event if it's a repetition (count > 1)
-                        if (existing.count > 1) {
+                        // Step 5: Detect Repeated Mistakes w/ Sensitivity
+                        const config = vscode.workspace.getConfiguration('engram');
+                        const sensitivity = config.get<string>('sensitivity', 'breeze');
+                        const threshold = sensitivity === 'strict' ? 1 : 2; // Strict: >1 (2+), Breeze: >2 (3+)
+
+                        if (existing.count > threshold) {
                             this._onMistakeRepeated.fire(existing);
                         }
                     }
@@ -171,10 +186,17 @@ export class MistakeDetector {
         const isDuplicate = fingerprint.fixes.some(f => f.diff === lastEdit.diff);
 
         if (!isDuplicate) {
+            // Reconstruct snapshots
+            // BEFORE: We don't have the full previous text, but we know the diff.
+            // AFTER: We have the current text (document state after edit).
+            // This is a simplification. Ideally we should cache the 'before' state when the error was first seen.
+            // For now, let's treat the 'diff' as the 'after' snippet if it's an insertion/replacement.
+
             const fix: MistakeFix = {
                 id: uuidv4(),
                 description: `Fixed via edit in ${path.basename(vscode.Uri.parse(uriStr).fsPath)}`,
                 diff: lastEdit.diff,
+                after: lastEdit.diff.includes('Replaced') ? lastEdit.diff.split('with "')[1].slice(0, -1) : '...',
                 timestamp: lastEdit.timestamp
             };
             fingerprint.fixes.push(fix);
@@ -198,6 +220,46 @@ export class MistakeDetector {
             // via 'vscode.languages.registerCodeLensProvider' mechanism or explicit refresh command.
             // But let's just save for now.
         }
+    }
+
+    public getMemoryCard(diagnostic: vscode.Diagnostic): MemoryCard | undefined {
+        const { hash } = this.fingerprintError(diagnostic);
+        const fingerprint = this.fingerprints.get(hash);
+
+        if (!fingerprint || fingerprint.count <= 1) {
+            return undefined;
+        }
+
+        let lastAction = "Unresolved / Ignored";
+        let lastFixId: string | undefined;
+
+        if (fingerprint.ignored) {
+            lastAction = "You manually dismissed this warning.";
+        } else if (fingerprint.fixes && fingerprint.fixes.length > 0) {
+            const lastFix = fingerprint.fixes[fingerprint.fixes.length - 1];
+            lastAction = `You fixed it by editing code: "${lastFix.diff.substring(0, 60)}..."`;
+            lastFixId = lastFix.id;
+        }
+
+        // AI-Assisted Analysis (Simulation)
+        // In a real system, we'd use embedding similarity here.
+        // For MVP, we check if there are multiple fixes for similar patterns.
+        let analysis: string | undefined;
+        if (fingerprint.fixes && fingerprint.fixes.length > 0) {
+            const f = fingerprint.fixes[0];
+            analysis = `This resembles a previous change caused by **${f.description.split(' in ')[0]}**. \n\nYou previously resolved this by modifying ${f.diff.length} characters.`;
+        }
+
+        return {
+            context: `This error has occurred ${fingerprint.count} times in your history.`,
+            lastSeen: fingerprint.lastSeen,
+            lastAction: lastAction,
+            frequency: fingerprint.count,
+            consequence: "Potential runtime failure based on previous occurrences.",
+            fixId: lastFixId,
+            fingerprintId: fingerprint.id,
+            analysis: analysis
+        };
     }
 
     public fingerprintError(diagnostic: vscode.Diagnostic): { hash: string, normalized: string, code: string } {

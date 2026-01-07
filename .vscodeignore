@@ -10,3 +10,11 @@ node_modules/**
 !node_modules/uuid/**
 !node_modules/vectordb/**
 !node_modules/@xenova/**
+
+# Exclude website and documentation assets
+website/**
+images/**
+!images/icon.png
+brain/**
+docs/**
+*.vsix

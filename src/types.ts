@@ -24,6 +24,9 @@ export interface MistakeFix {
     id: string;
     description: string; // e.g., "Diff to resolve"
     diff: string; // The specific change applied
+    before?: string; // Contextual snapshot before fix
+    after?: string; // Contextual snapshot after fix
+    commitMsg?: string; // Optional commit message
     timestamp: number;
 }
 
@@ -56,4 +59,15 @@ export interface SecurityRule {
     pattern: string; // Regex string
     risk: string;
     alternative: string;
+}
+
+export interface MemoryCard {
+    context: string;
+    lastSeen: number;
+    lastAction: string;
+    consequence?: string;
+    frequency: number; // Count
+    fixId?: string; // ID of the last fix
+    fingerprintId?: string; // ID of the mistake pattern
+    analysis?: string; // AI-Assisted Diff Analysis
 }

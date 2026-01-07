@@ -1,9 +1,9 @@
 {
   "name": "engram",
   "displayName": "Engram",
-  "description": "The gateway to code memory. Local-first semantic index and context retrieval.",
+  "description": "The gateway to code memory. A privacy-first VS Code extension that indexes your prompt history and prevents repeated mistakes.",
   "readme": "README.md",
-  "version": "0.0.6",
+  "version": "1.0.0",
   "publisher": "use-engram",
   "icon": "images/icon.png",
   "engines": {
@@ -48,6 +48,21 @@
           "name": "Prompt Timeline"
         }
       ]
+    },
+    "configuration": {
+      "type": "object",
+      "title": "Engram",
+      "properties": {
+        "engram.sensitivity": {
+          "type": "string",
+          "enum": [
+            "breeze",
+            "strict"
+          ],
+          "default": "breeze",
+          "description": "Controls how often Engram warns you. 'Breeze' is quiet (3+ mistakes), 'Strict' is aggressive (2+ mistakes)."
+        }
+      }
     }
   },
   "scripts": {

@@ -13,6 +13,8 @@ import { SnippetStore } from './snippetStore';
 import { SecurityScanner } from './securityScanner';
 import { SecurityExemptionManager } from './securityExemptions';
 import { SecurityCodeActionProvider } from './SecurityCodeActionProvider';
+import { MemoryCardProvider } from './ui/MemoryCardProvider';
+import { StatusBarController } from './ui/StatusBarController';
 
 export async function activate(context: vscode.ExtensionContext) {
     const logger = Logger.getInstance();
@@ -65,6 +67,15 @@ export async function activate(context: vscode.ExtensionContext) {
         exemptionManager.init(path.join(context.globalStorageUri.fsPath, 'exemptions'));
     }
 
+    // Initialize Status Bar Controller (Sensitivity)
+    const statusBarController = new StatusBarController(context); // Manages its own disposables
+
+    // Command: Toggle Sensitivity
+    let toggleSensitivityDisposable = vscode.commands.registerCommand('engram.toggleSensitivity', async () => {
+        await statusBarController.toggle();
+    });
+    context.subscriptions.push(toggleSensitivityDisposable);
+
     // Connect Paste Detector to Snippet Store and Security Scanner
     const pasteDisposable = PasteDetector.getInstance().onPasteDetected(async (event) => {
         // 1. Search for existing snippet (Similarity Search)
@@ -78,7 +89,19 @@ export async function activate(context: vscode.ExtensionContext) {
         const securityIssues = SecurityScanner.getInstance().scanText(event.text, event.document.languageId);
 
         // Filter out exemptions (Step 5)
-        const activeIssues = securityIssues.filter(issue => !exemptionManager.isExempt(issue.rule.id, event.document.uri.fsPath));
+        let activeIssues = securityIssues.filter(issue => !exemptionManager.isExempt(issue.rule.id, event.document.uri.fsPath));
+
+        // Filter based on Sensitivity
+        const config = vscode.workspace.getConfiguration('engram');
+        const sensitivity = config.get<string>('sensitivity', 'breeze');
+
+        if (sensitivity === 'breeze') {
+            // In Breeze mode, only show Critical issues
+            // We assume risk string starts with "Critical" or similar.
+            // Our rules (SECURITY_RULES) have risks like "Code Injection Risk (Critical)".
+            // Let's filter loosely.
+            activeIssues = activeIssues.filter(issue => issue.rule.risk.toLowerCase().includes('critical'));
+        }
 
         if (activeIssues.length > 0) {
             const diags: vscode.Diagnostic[] = [];
@@ -261,6 +284,12 @@ export async function activate(context: vscode.ExtensionContext) {
         vscode.languages.registerCodeLensProvider({ scheme: 'file' }, codeLensProvider)
     );
 
+    // Register Memory Card Provider (Hover)
+    const memoryCardProvider = new MemoryCardProvider();
+    context.subscriptions.push(
+        vscode.languages.registerHoverProvider('*', memoryCardProvider)
+    );
+
     // Command: View Mistake Fix
     let viewMistakeDisposable = vscode.commands.registerCommand('engram.viewMistakeFix', async (fingerprintId: string) => {
         const fp = detector.getFingerprint(fingerprintId);
@@ -268,7 +297,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
         // Prepare Actions
         interface PickerItem extends vscode.QuickPickItem {
-            action: 'show' | 'dismiss';
+            action: 'show' | 'dismiss' | 'replay';
             fix?: any;
         }
 
@@ -281,6 +310,14 @@ export async function activate(context: vscode.ExtensionContext) {
                     description: f.description,
                     detail: f.diff.substring(0, 60) + '...',
                     action: 'show',
+                    fix: f
+                });
+
+                // Add explicit Replay option
+                items.push({
+                    label: `       $(history) Replay Fix`,
+                    description: 'See Before vs After diff',
+                    action: 'replay',
                     fix: f
                 });
             });
@@ -315,10 +352,91 @@ export async function activate(context: vscode.ExtensionContext) {
                     language: 'diff'
                 });
                 await vscode.window.showTextDocument(doc, { preview: true, viewColumn: vscode.ViewColumn.Beside });
+            } else if (selected.action === 'replay' && selected.fix) {
+                // Replay Logic (Virtual Diff)
+                const leftContent = selected.fix.before || "// 'Before' snapshot unavailable. \n// Showing raw diff instead:\n" + selected.fix.diff;
+                const rightContent = selected.fix.after || selected.fix.diff; // Fallback
+
+                // Create virtual documents
+                // We use 'untitled' scheme to open them in memory
+                // Note: 'untitled' might mark them as dirty. ContentProvider is better but 'untitled' is easier for now.
+                const leftUri = vscode.Uri.parse(`untitled:Before-Fix-${selected.fix.id}`);
+                const rightUri = vscode.Uri.parse(`untitled:After-Fix-${selected.fix.id}`);
+
+                const leftDoc = await vscode.workspace.openTextDocument(leftUri);
+                // We need to write content. For untitled, we use WorkspaceEdit or inserts.
+                // A simpler way: openTextDocument({ content: ... }) doesn't support URI directly.
+                // Let's use simple provider or just diffing strings is hard in VS Code? 
+                // Actually, vscode.commands.executeCommand('vscode.diff', ...) takes URIs.
+                // We need a ContentProvider.
+
+                // HACK: Just show text document with content for now OR register a provider.
+                // To keep it clean, let's register a simple 'engram-readonly' scheme provider? 
+                // Or just use 'untitled' and fill it.
+
+                const edit = new vscode.WorkspaceEdit();
+                edit.insert(leftUri, new vscode.Position(0, 0), leftContent);
+                edit.insert(rightUri, new vscode.Position(0, 0), rightContent);
+                await vscode.workspace.applyEdit(edit);
+
+                await vscode.commands.executeCommand('vscode.diff',
+                    leftUri,
+                    rightUri,
+                    `Replay Fix: ${new Date(selected.fix.timestamp).toLocaleTimeString()}`
+                );
             }
         }
     });
     context.subscriptions.push(viewMistakeDisposable);
+
+    // Command: Direct Replay (for Hover Links)
+    let replayFixDisposable = vscode.commands.registerCommand('engram.replayFix', async (fingerprintId: string, fixId: string) => {
+        const fp = detector.getFingerprint(fingerprintId);
+        if (!fp || !fp.fixes) {
+            vscode.window.showErrorMessage('Mistake record not found.');
+            return;
+        }
+
+        const fix = fp.fixes.find(f => f.id === fixId);
+        if (!fix) {
+            vscode.window.showErrorMessage('Specific fix version not found.');
+            return;
+        }
+
+        // Replay Logic (Virtual Diff)
+        const leftContent = fix.before || `// 'Before' snapshot unavailable. \n// Showing raw diff instead:\n${fix.diff}`;
+        const rightContent = fix.after || fix.diff;
+
+        const leftUri = vscode.Uri.parse(`untitled:Before-Fix-${fix.id}`);
+        const rightUri = vscode.Uri.parse(`untitled:After-Fix-${fix.id}`);
+
+        const edit = new vscode.WorkspaceEdit();
+        // Since we can't clear 'untitled' easily, we rely on unique IDs or just appending if it exists.
+        // Ideally we would use a TextDocumentContentProvider, but for MVP this is okay.
+
+        // Try to open it. If it has lines, clear them?
+        // Hard to clear without range. Let's just insert at top.
+        // Actually, if we reuse ID, it keeps content.
+        // Let's use a random ID suffix if we want fresh? Or unique fix ID is enough.
+        // If user replays same fix twice, they get same doc.
+
+        // HACK: To overwrite, we need to delete everything.
+        // But untitled docs are managed by VS Code.
+        // Let's assume the user closes it.
+        // Or we can register a provider if we want cleaner.
+        // Let's stick to untitled and just insert.
+
+        edit.insert(leftUri, new vscode.Position(0, 0), leftContent);
+        edit.insert(rightUri, new vscode.Position(0, 0), rightContent);
+        await vscode.workspace.applyEdit(edit);
+
+        await vscode.commands.executeCommand('vscode.diff',
+            leftUri,
+            rightUri,
+            `Replay Fix: ${new Date(fix.timestamp).toLocaleTimeString()}`
+        );
+    });
+    context.subscriptions.push(replayFixDisposable);
 
     // Register Webview Provider
     const timelineProvider = new TimelineProvider(context.extensionUri, sessionStore);
