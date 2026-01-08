@@ -2,14 +2,16 @@
     display: none;
 }
 
+/* CSS Reset & Variables */
 :root {
-    --bg-color: #ffffff;
+    --bg-color: #FAF9F6;
+    /* Cream/Beige from reference */
     --text-primary: #1a1a1a;
     --text-secondary: #555555;
-    --btn-bg: #111111;
+    --btn-bg: #000000;
     --btn-text: #ffffff;
-    --glass-bg: rgba(255, 255, 255, 0.4);
-    --glass-border: rgba(255, 255, 255, 0.6);
+    --surface-white: #ffffff;
+    --border-subtle: rgba(0, 0, 0, 0.08);
 }
 
 @font-face {
@@ -17,10 +19,8 @@
     src: url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
 }
 
-@font-face {
-    font-family: 'Outfit';
-    src: url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap');
-}
+/* Use Newsreader for that editorial Serif look */
+/* Imported in HTML, just referencing here if needed */
 
 * {
     margin: 0;
@@ -28,14 +28,11 @@
     box-sizing: border-box;
 }
 
-html {
-    scroll-behavior: smooth;
-}
-
 body {
-    background: #ffffff;
+    background: var(--bg-color);
     color: var(--text-primary);
     font-family: 'Inter', sans-serif;
+    /* Default sans */
     overflow-x: hidden;
     min-height: 100vh;
 }
@@ -45,363 +42,226 @@ nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 2.5rem 6%;
+    padding: 1.5rem 4%;
     max-width: 1400px;
     margin: 0 auto;
-
-    /* Overlay on Hero */
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-
+    position: relative;
     z-index: 20;
 }
 
 .logo-group {
     display: flex;
     align-items: center;
-    gap: 0.8rem;
+    gap: 0.6rem;
     font-weight: 600;
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     text-decoration: none;
     color: var(--text-primary);
 }
 
 .logo-svg {
-    width: 32px;
-    height: 32px;
-    /* No background needed as it's an SVG */
+    width: 24px;
+    height: 24px;
 }
 
-.nav-links {
+.nav-actions {
     display: flex;
-    gap: 2.5rem;
     align-items: center;
+    gap: 1.5rem;
 }
 
-.nav-links a {
-    color: var(--text-primary);
+.nav-center {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    background: #f5f5f5;
+    /* Light grey pill */
+    padding: 1.1rem 2.5rem;
+    /* Increased size */
+    border-radius: 100px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.nav-center a {
     text-decoration: none;
+    color: var(--text-primary);
     font-size: 0.95rem;
     font-weight: 500;
+    transition: color 0.2s;
+}
+
+.nav-center a:hover {
+    color: #666;
+}
+
+.link-text {
+    text-decoration: none;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.btn-black-nav {
+    background: #000;
+    color: #fff;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    /* Slightly rounded like reference */
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: opacity 0.2s;
+}
+
+.btn-black-nav:hover {
     opacity: 0.8;
 }
 
-.btn-nav-outline {
-    border: 1px solid #000;
-    padding: 0.7rem 1.4rem;
-    border-radius: 50px;
-    font-size: 0.9rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: background 0.2s;
-}
-
-.btn-nav-outline:hover {
-    background: rgba(0, 0, 0, 0.03);
-}
-
-/* Page Frame Wrapper */
+/* Page Frame styling removal (make full width/clean like reference) */
 .page-frame {
-    margin: 1rem;
-    /* Adjusted thickness */
-    border-radius: 30px;
-    overflow: hidden;
-    position: relative;
-    min-height: calc(100vh - 2rem);
-
-    /* Background Color (White for bottom part) */
-    background-color: #ffffff;
-
-    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.02);
-    /* Subtle edge definition */
+    /* Resetting frame styles to be cleaner */
+    margin: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    min-height: auto;
 }
 
-/* Sky Background Layer via Pseudo-element */
 .page-frame::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 155vh;
-    /* Extended further down */
-
-    background: url('sky-bg.png') no-repeat center top;
-    background-size: cover;
-
-    /* Rounded Visuals at Bottom */
-    border-radius: 0 0 30px 30px;
-
-    z-index: 0;
-    /* Background layer */
-}
-
-.page-frame.no-bg::before {
     display: none;
 }
 
-/* Ensure Nav and Hero sit above the background */
-nav,
-#hero {
-    position: relative;
-    z-index: 1;
-}
 
-/* Hero */
+/* Hero Section */
 #hero {
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
+    padding-top: 8rem;
+    /* Increased padding per request */
+    padding-bottom: 25rem;
+    /* Added padding */
     position: relative;
-
-    /* Extended Height Extreme */
-    min-height: 150vh;
-
-    padding-bottom: 0;
-
-    /* Centering Content */
-    justify-content: center;
-    padding-top: 0;
-
-    /* Push content upwards by adding bottom padding */
-    /* Increased to 43vh to move content slightly higher as requested */
-    padding-bottom: 53vh;
-
-    /* Sky Background (Removed - Moved to Wrapper) */
-    background: transparent;
-
-    z-index: 1;
-    overflow: hidden;
+    /* Removed overflow: hidden to allow dashboard to straddle */
 }
 
+/* Badge Pill */
+
+
+
+/* Main Title - Serif */
 h1 {
-    font-family: 'Inter', sans-serif;
-    font-size: 6rem;
+    font-family: 'Newsreader', serif;
+    font-size: 3.0rem;
+    /* Adjusted request */
     line-height: 1.1;
     font-weight: 400;
-    /* Matching the .feature-text h2 thickness */
-    letter-spacing: -2.5px;
-    /* Scaled tightness for Inter */
-    color: #050505;
-    margin-bottom: 2rem;
-    max-width: 1200px;
-    /* Increased to accommodate pill */
-    z-index: 5;
-    /* Removed display: flex and related flex properties */
-    margin-left: auto;
-    /* Center the block element */
-    margin-right: auto;
-    /* Center the block element */
-    text-align: center;
-    /* Center inline content like the scrolling pill */
+    color: #1a1a1a;
+    margin-bottom: 1.5rem;
+    /* Standard separation */
+    letter-spacing: -0.02em;
+    max-width: 100%;
+    /* Allow full width for single line */
 }
-
-/* 
-   SCROLLING PILL ANIMATION 
-*/
-.scrolling-pill {
-    display: inline-block;
-    height: 1.2em;
-    /* Increased height box */
-    line-height: 1.2em;
-    /* Center text vertically */
-    font-size: 0.75em;
-    /* Smaller text as requested */
-    font-weight: 500;
-    /* Increased weight to match H1 thickness visually */
-    vertical-align: middle;
-    /* Better align with "Code" */
-    overflow: hidden;
-    position: relative;
-
-    background: rgba(255, 255, 255, 0.25);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    border-radius: 100px;
-    padding: 0 0.5em;
-    /* Reduced side padding (was 0.8em) */
-
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    margin-left: 0.2em;
-    color: #111;
-    transform: translateY(0);
-    /* Remove alignment tweak, rely on vertical-align */
-}
-
-.scroll-track {
-    display: block;
-    animation: scrollUp 8s cubic-bezier(0.65, 0, 0.35, 1) infinite;
-}
-
-.scroll-track span {
-    display: block;
-    height: 1.2em;
-    text-align: center;
-    padding: 0 0.2em;
-    transform: translateY(-0.1em);
-}
-
-@keyframes scrollUp {
-
-    0%,
-    20% {
-        transform: translateY(0);
-    }
-
-    33%,
-    53% {
-        transform: translateY(-1.2em);
-    }
-
-    66%,
-    86% {
-        transform: translateY(-2.4em);
-    }
-
-    100% {
-        transform: translateY(-3.6em);
-    }
-}
-
 
 .subtitle {
+    font-family: 'Inter', sans-serif;
     color: var(--text-secondary);
-    font-size: 1.1rem;
+    font-size: 1.2rem;
+    /* Increased per request */
     line-height: 1.6;
-    max-width: 600px;
-    margin: 0 auto 3rem auto;
+    max-width: 100%;
+    /* Allow full width to prevent wrapping */
+    margin: 0 auto 2.5rem auto;
+    /* Standard separation */
     font-weight: 400;
-    z-index: 5;
 }
 
+/* Buttons */
 .cta-container {
-    margin-bottom: 2rem;
-    z-index: 5;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 3.5rem;
+    /* Standard separation */
 }
 
 .btn-black {
-    background: #1a1a1a;
+    background: #111;
     color: white;
-    padding: 1rem 2.2rem;
-    border-radius: 50px;
+    padding: 0.9rem 2rem;
+    border-radius: 12px;
+    /* Reference looks slightly squared rounded */
     text-decoration: none;
     font-size: 1rem;
     font-weight: 500;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.8rem;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s;
 }
 
-.btn-black:hover {
-    transform: translateY(-2px);
+.btn-outline-hero {
+    background: #EBEAE5;
+    /* Slightly darker beige/grey */
+    color: #111;
+    padding: 0.9rem 2rem;
+    border-radius: 12px;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: background 0.2s;
 }
 
-/* Visuals */
-.visual-container {
-    position: relative;
+.btn-outline-hero:hover {
+    background: #e0dfda;
+}
+
+/* Dashboard Mockup Placeholder */
+/* Dashboard Mockup Placeholder */
+.dashboard-placeholder {
     width: 100%;
-    max-width: 900px;
-
-    margin-top: 4rem;
-
-    margin-bottom: -12rem;
-    z-index: 1;
-    display: flex;
-    justify-content: center;
-    pointer-events: none;
-}
-
-.glass-img {
-    width: 90%;
+    max-width: 1200px;
+    /* Increased width per request */
     height: auto;
-    mix-blend-mode: multiply;
-    opacity: 0.95;
+    padding: 0 20px;
+    margin-bottom: -130px;
+    z-index: 60;
+    position: relative;
 }
 
-
-/* Glass Cards - External Layout */
-.features-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
+.dashboard-mockup {
     width: 100%;
-    max-width: 1200px;
-    padding: 0 5%;
-
-    /* STRADDLE POSITIONING */
-    margin: -13rem auto 4rem auto;
-
+    height: 550px;
+    /* Increased to make image taller */
+    background: #2a2a2a;
+    border-radius: 24px;
+    box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.1);
     position: relative;
-    z-index: 50;
-    /* Above Hero */
+    overflow: hidden;
+    display: block;
 }
 
-.glass-card {
-    background: rgba(255, 255, 255, 0.4);
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
-    padding: 2.5rem;
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.6);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    min-height: 240px;
-    transition: background 0.3s;
+.dashboard-img {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    /* Stretch to fit */
+    display: block;
+    margin: 0;
+    padding: 0;
+    border-radius: 24px;
+    transform: scale(1.15);
+    /* Zoom in more per request */
 }
 
-.glass-card:hover {
-    background: rgba(255, 255, 255, 0.6);
-}
 
-.glass-card h3 {
-    font-size: 1.2rem;
-    font-weight: 500;
-    margin-bottom: 0.5rem;
-    color: #222;
-}
 
-.glass-card p {
-    font-size: 0.9rem;
-    color: #666;
-    margin-bottom: 2rem;
-    line-height: 1.4;
-}
-
-.card-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: #333;
-}
-
-.arrow-icon {
-    font-size: 1.1rem;
-    opacity: 0.6;
-}
-
-/* 
- NEW SECTION STYLES 
-*/
-
-#intelligence {
-    max-width: 1200px;
-    margin: 0 auto 5rem auto;
-    padding: 10rem 5% 2rem 5%;
-    position: relative;
-    z-index: 10;
-    background: #ffffff;
+/* Spacer for flow */
+#features-spacer {
+    height: 200px;
+    background: transparent;
 }
 
 .split-section {
@@ -1197,4 +1057,15 @@ footer {
 
 .animate-enter {
     animation: pageEntrance 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Intelligence Tools Section (New) */
+#intelligence {
+    max-width: 1200px;
+    margin: 0 auto 5rem auto;
+    padding: 18rem 5% 2rem 5%;
+    /* Increased top padding to 18rem to CLEAR the dashboard overlap */
+    position: relative;
+    z-index: 10;
+    background: #ffffff;
 }
