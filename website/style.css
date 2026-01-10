@@ -1264,6 +1264,15 @@ footer {
     letter-spacing: -0.02em;
 }
 
+.section-tighter-top {
+    margin-top: -1rem !important;
+}
+
+.section-tighter-top h2 {
+    font-size: 3.5rem;
+    transform: translateY(2rem);
+}
+
 .expert-card {
     background: #f9fafb;
     /* Very light grey/white smoke */
@@ -1356,6 +1365,14 @@ footer {
     }
 }
 
+/* Memory Brain Image */
+.memory-brain-image {
+    width: 300px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
 /* Creator & Agent Section */
 .creator-agent-container {
     margin-top: 2rem;
@@ -1367,8 +1384,9 @@ footer {
 }
 
 .creator-agent-grid {
-    display: flex;
-    gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
 }
 
 .creator-card,
@@ -1384,6 +1402,7 @@ footer {
     /* Set to 500px as requested */
     position: relative;
     overflow: hidden;
+    text-align: left;
 }
 
 .card-header-row {
@@ -1427,5 +1446,196 @@ footer {
 @media (max-width: 768px) {
     .creator-agent-grid {
         flex-direction: column;
+    }
+}
+
+/* Recall Pear Image */
+.recall-pear-image {
+    width: 250px;
+    height: auto;
+    display: block;
+    margin: 3rem auto 0 auto;
+    opacity: 0.9;
+}
+
+/* Recall Star Image */
+.recall-star-image {
+    width: 250px;
+    height: auto;
+    display: block;
+    margin: 3rem auto 0 auto;
+    opacity: 0.9;
+}
+
+/* Replay Play Image */
+.replay-play-image {
+    width: 250px;
+    height: auto;
+    display: block;
+    margin: 3rem auto 0 auto;
+    opacity: 0.9;
+}
+
+/* Short Card Modifier */
+.short-card {
+    min-height: 300px !important;
+}
+
+/* Navigation Pill */
+.nav-pill-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+    grid-column: 1 / -1;
+    /* Span all columns */
+    width: 100%;
+}
+
+.nav-pill {
+    background: #f9fafb;
+    /* Match card background */
+    border-radius: 9999px;
+    /* Pill shape */
+    padding: 0.8rem 2rem;
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.nav-pill ion-icon {
+    font-size: 1.2rem;
+    color: #000;
+    cursor: pointer;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.nav-pill ion-icon:hover {
+    transform: scale(1.1);
+    color: #333;
+}
+
+/* Animations for Card Slides */
+@keyframes fadeOutDown {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-out {
+    animation: fadeOutDown 0.4s ease-in forwards;
+}
+
+/* Feature Highlight Card */
+.feature-highlight-container {
+    display: flex;
+    width: 100%;
+    max-width: 1200px;
+    margin: 4rem auto;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: #f9fafb;
+    min-height: 500px;
+}
+
+.highlight-text-side {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 2rem;
+    background-color: #f0f2f5;
+    /* Slightly darker than card bg */
+}
+
+.highlight-text-side h2 {
+    font-size: 5rem;
+    line-height: 1.1;
+    text-align: center;
+    z-index: 2;
+    color: #000;
+    font-weight: 500;
+}
+
+.vertical-text {
+    position: absolute;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    color: #4d96ff;
+    /* Brand Blue */
+    font-family: 'Pixelify Sans', monospace;
+    /* Use pixel font for flair */
+    font-size: 1.5rem;
+    letter-spacing: 0.5rem;
+    opacity: 0.6;
+    z-index: 1;
+}
+
+.vertical-left {
+    left: 4rem;
+    top: 50%;
+    transform: translateY(-50%) rotate(180deg);
+    /* Rotate for correct reading direction if needed, or keeping standard vertical */
+}
+
+.vertical-right {
+    right: 4rem;
+    top: 50%;
+    transform: translateY(-50%) rotate(180deg);
+}
+
+.highlight-image-side {
+    flex: 1;
+    background-color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.highlight-image-side img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    image-rendering: pixelated;
+    /* Enhance pixel art look */
+}
+
+@media (max-width: 768px) {
+    .feature-highlight-container {
+        flex-direction: column;
+    }
+
+    .highlight-text-side {
+        min-height: 300px;
+    }
+
+    .vertical-text {
+        display: none;
+        /* Hide vertical text on mobile */
+    }
+
+    .highlight-image-side {
+        min-height: 300px;
     }
 }

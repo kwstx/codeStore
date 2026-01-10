@@ -11,7 +11,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Akshar:wght@300..700&family=Inter:wght@300;400;500;600&family=Montserrat:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Pixelify+Sans:wght@400..700&family=Press+Start+2P&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=114">
+    <link rel="stylesheet" href="style.css?v=142">
     <!-- Ionicons -->
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
 </head>
@@ -121,19 +121,7 @@
                     </p>
                 </div>
                 <div class="expert-visuals">
-                    <!-- Bars -->
-                    <div class="model-bar bar-pear">
-                        <span>PearAI Model <span class="score">94.10</span></span>
-                    </div>
-                    <div class="model-bar bar-gpt">
-                        <span>GPT-4o <span class="score">80.53</span></span>
-                    </div>
-                    <div class="model-bar bar-llama">
-                        <span>Meta Llama 3.1 405b <span class="score">80.43</span></span>
-                    </div>
-                    <div class="model-bar bar-claude">
-                        <span>Claude 3 Opus <span class="score">76.74</span></span>
-                    </div>
+                    <img src="engram_recall_pear.png?v=6" alt="Engram Memory Brain" class="memory-brain-image">
                 </div>
             </div>
 
@@ -146,10 +134,11 @@
                             <h3>Engram Recall</h3>
                             <span class="powered-by">Powered by local IDE memory engine</span>
                         </div>
-                        <div class="coming-soon">Available Now</div>
+                        <div style="margin-bottom: 1rem;"></div>
                         <p>Recalls past fixes and mistake patterns ensuring your code avoids repeated errors across
                             files and projects</p>
 
+                        <img src="engram_star.png?v=5" alt="Engram Recall Star" class="recall-star-image">
 
                     </div>
 
@@ -159,16 +148,94 @@
                             <h3>Engram Replay</h3>
                             <span class="powered-by">Powered by local IDE memory engine</span>
                         </div>
+                        <div style="margin-bottom: 1rem;"></div>
                         <p>Replays how you fixed similar mistakes using diffs and contextual history</p>
 
+                        <img src="engram_play.png?v=3" alt="Engram Replay Play" class="replay-play-image">
 
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+        <!-- What's in it for you Section -->
+        <div class="expert-section-container section-tighter-top">
+            <h2>Keep Your Flow</h2>
+            <p style="margin-top: 1rem; color: #555;">Stay in the zone while your IDE remembers fixes.</p>
+            <div class="creator-agent-container">
+                <div class="creator-agent-grid" id="card-slide-1">
+                    <!-- Card 1 -->
+                    <div class="creator-card short-card">
+                        <div class="card-header-row">
+                            <h3>Stop Forgetting Fixes</h3>
+                        </div>
+                        <div style="margin-bottom: 5rem;"></div>
+                        <p>Engram remembers how you fixed bugs and throws that context back at you before you waste time
+                            solving them again.</p>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="agent-card short-card">
+                        <div class="card-header-row">
+                            <h3>Break Bad Patterns</h3>
+                        </div>
+                        <div style="margin-bottom: 5rem;"></div>
+                        <p>Expose mistakes you keep repeating across projects and get warned inline before those habits
+                            turn into production bugs again.</p>
+                    </div>
+                </div>
+
+                <!-- Slide 2 (Hidden) -->
+                <div class="creator-agent-grid" id="card-slide-2" style="display: none;">
+                    <!-- Card 3 -->
+                    <div class="creator-card short-card">
+                        <div class="card-header-row">
+                            <h3>Replay Your Wins</h3>
+                        </div>
+                        <div style="margin-bottom: 5rem;"></div>
+                        <p>One click replays previous fixes showing diffs reasoning and context so you stop guessing how
+                            you solved similar problems before.</p>
+                    </div>
+
+                    <!-- Card 4 -->
+                    <div class="agent-card short-card">
+                        <div class="card-header-row">
+                            <h3>Reuse Without Regret</h3>
+                        </div>
+                        <div style="margin-bottom: 5rem;"></div>
+                        <p>Know when code was pasted before reuse it safely with context and security checks instead of
+                            blindly copying mistakes forward.</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Pill -->
+                <div class="nav-pill-container">
+                    <div class="nav-pill">
+                        <ion-icon name="arrow-back-outline" id="nav-prev"></ion-icon>
+                        <ion-icon name="arrow-forward-outline" id="nav-next"></ion-icon>
                     </div>
                 </div>
             </div>
         </div>
-        <script src="script.js?v=3"></script>
-        <script src="hero-game.js?v=33"></script>
-        <!-- Last Updated: 2026-01-06 Final Deployment Trigger -->
+    </div>
+
+    <!-- Feature Highlight Card -->
+    <div class="feature-highlight-container">
+        <div class="highlight-text-side">
+            <div class="vertical-text vertical-left">PATTERN</div>
+            <h2>Scale<br>Your<br>Mind</h2>
+            <div class="vertical-text vertical-right">VAULT</div>
+        </div>
+        <div class="highlight-image-side">
+            <img src="engram_pixel_mountain.png" alt="Pixel Art Mountain Landscape">
+        </div>
+    </div>
+
+    <script src="script.js?v=7"></script>
+    <script src="hero-game.js?v=33"></script>
+    <!-- Last Updated: 2026-01-06 Final Deployment Trigger -->
 </body>
 
 </html>

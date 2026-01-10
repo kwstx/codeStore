@@ -84,4 +84,49 @@ document.addEventListener('DOMContentLoaded', () => {
             this.classList.add('active');
         });
     });
+
+    // Navigation Pill Logic
+    const navPrev = document.getElementById('nav-prev');
+    const navNext = document.getElementById('nav-next');
+    const slide1 = document.getElementById('card-slide-1');
+    const slide2 = document.getElementById('card-slide-2');
+
+    console.log('Nav Elements:', { navPrev, navNext, slide1, slide2 });
+
+    if (navPrev && navNext && slide1 && slide2) {
+        let isAnimating = false;
+
+        const toggleSlides = () => {
+            if (isAnimating) return;
+            isAnimating = true;
+
+            console.log('Toggling slides with animation');
+
+            const currentSlide = slide1.style.display !== 'none' ? slide1 : slide2;
+            const nextSlide = currentSlide === slide1 ? slide2 : slide1;
+
+            // 1. Animate Out
+            currentSlide.classList.add('animate-out');
+
+            currentSlide.addEventListener('animationend', () => {
+                currentSlide.classList.remove('animate-out');
+                currentSlide.style.display = 'none';
+
+                // 2. Prepare Next Slide
+                nextSlide.style.display = 'grid';
+                nextSlide.classList.add('animate-in');
+
+                nextSlide.addEventListener('animationend', () => {
+                    nextSlide.classList.remove('animate-in');
+                    isAnimating = false;
+                }, { once: true });
+
+            }, { once: true });
+        };
+
+        navPrev.addEventListener('click', toggleSlides);
+        navNext.addEventListener('click', toggleSlides);
+    } else {
+        console.error('Navigation elements not found!');
+    }
 });
