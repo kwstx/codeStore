@@ -143,7 +143,7 @@ nav {
     align-items: center;
     text-align: center;
     padding-top: 8rem;
-    /* Increased padding per request */
+    /* Reverted padding per request */
     padding-bottom: 5rem;
     /* Reduced padding as section is now outside */
     position: relative;
@@ -160,8 +160,8 @@ h1 {
     /* Matched to features header */
     font-size: 3.0rem;
     /* Adjusted request */
-    line-height: 1.05;
-    /* Tighter line height */
+    line-height: 1.2;
+    /* Increased to prevent clipping */
     font-weight: 500;
     /* Medium weight */
     color: #1a1a1a;
@@ -171,6 +171,48 @@ h1 {
     /* Very tight tracking */
     max-width: 100%;
     /* Allow full width for single line */
+}
+
+.typing-title {
+    display: inline-block;
+    overflow: hidden;
+    /* Ensures the content is not revealed until the animation */
+    white-space: nowrap;
+    /* Keeps the content on a single line */
+    margin: 0 auto;
+    /* Gives that scrolling effect as the typing happens */
+    transform: translateY(-15px);
+    /* Move text up independently */
+    padding-bottom: 0.2em;
+    /* Ensure descenders aren't cut off */
+    letter-spacing: -0.04em;
+    /* Adjust as needed */
+    animation:
+        typing 4.5s steps(40, end);
+}
+
+/* The typing effect */
+@keyframes typing {
+    from {
+        width: 0
+    }
+
+    to {
+        width: 100%
+    }
+}
+
+/* The typewriter cursor effect */
+@keyframes blink-caret {
+
+    from,
+    to {
+        border-color: transparent
+    }
+
+    50% {
+        border-color: #1a1a1a;
+    }
 }
 
 .subtitle {
