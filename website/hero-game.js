@@ -14,58 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
     canvas.width = 1200;
     canvas.height = 550;
 
-    // Background Pattern (Generative Grid)
+    // Background Pattern (Generative Grid) - DISABLED
     const bgElements = [];
-    const cellSize = 40;
-    const cols = Math.ceil(canvas.width / cellSize);
-    const rows = Math.ceil(canvas.height / cellSize);
-
-    // Palette
-    const bgGrey = '#f0f2f5'; // Very light grey for grid
-    const accentRed = '#ea4335';
-    const accentBlue = '#4285f4';
-    const accentPurple = '#d8b4fe'; // Pastel Purple (replaced Yellow)
-    const accentGrey = '#dadce0';
-
-    for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < cols; c++) {
-            // 40% chance to be empty, 50% light grey, 10% accent
-            const rand = Math.random();
-            const x = c * cellSize + (cellSize / 2);
-            const y = r * cellSize + (cellSize / 2);
-
-            if (rand > 0.4) {
-                let type = 'rect';
-                let color = bgGrey;
-                let size = cellSize * 0.4; // Default small square
-                let speed = 0.5; // Uniform slow scroll
-
-                if (rand > 0.95) { // 5% Rare Accents
-                    const acc = Math.random();
-                    if (acc < 0.33) { color = accentRed; size = cellSize * 0.5; }
-                    else if (acc < 0.66) { color = accentBlue; size = cellSize * 0.5; type = 'rect'; }
-                    else { color = accentPurple; type = 'circle'; size = cellSize * 0.4; }
-                } else if (rand > 0.90) { // 5% Large Grey Circles
-                    color = accentGrey;
-                    type = 'circle';
-                    size = cellSize * 0.6;
-                }
-
-                // Jitter position slightly
-                const offsetX = (Math.random() - 0.5) * 10;
-                const offsetY = (Math.random() - 0.5) * 10;
-
-                bgElements.push({
-                    x: x + offsetX,
-                    y: y + offsetY,
-                    size: size,
-                    color: color,
-                    type: type,
-                    speed: speed
-                });
-            }
-        }
-    }
+    // const cellSize = 40;
+    // ... generation logic removed to clear view for background image ...
 
     // Game Objects
     const ship = {
@@ -163,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const pixelSize = w / 15; // Assume 15 pixels wide
 
         // Color Palette
-        const white = '#b0b3b8'; // Grey from reference
+        const white = '#63666b'; // Darker Grey
         const red = '#2d7ff9'; // Bright Blue from reference
         const blue = '#2d7ff9'; // Also Blue
         const black = '#000000'; // For contrast details if needed
@@ -206,10 +158,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const pixelSizeW = w / 11;
         const pixelSizeH = h / 8;
 
-        const pink = '#fc9cbd'; // Pastel Pink
+        const pink = '#8a2be2'; // Darker Purple (Blue Violet)
         const pinkGrey = '#b0b3b8'; // Grey for Pink variant
 
-        const green = '#66c204'; // Bright Green from reference
+        const green = '#8a2be2'; // Darker Purple (Blue Violet)
         const greenGrey = '#b0b3b8'; // Grey for Green variant (same)
 
         let bodyColor = pink;
@@ -356,11 +308,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Draw Frame
     function draw() {
         // Clear Canvas
-        ctx.fillStyle = '#f9fafb'; // Card Grey
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // Clear Canvas (Transparent to show CSS background)
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Draw Stars
-        // Draw Background Pattern
+        // Draw Stars - DISABLED
+        // Draw Background Pattern - DISABLED
+        /*
         bgElements.forEach(el => {
             ctx.fillStyle = el.color;
             if (el.type === 'circle') {
@@ -371,6 +324,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 ctx.fillRect(el.x - el.size / 2, el.y - el.size / 2, el.size, el.size);
             }
         });
+        */
         ctx.globalAlpha = 1.0; // Reset alpha
 
         // Draw Player

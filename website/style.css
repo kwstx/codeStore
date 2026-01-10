@@ -1371,6 +1371,8 @@ footer {
     height: auto;
     display: block;
     margin: 0 auto;
+    transform: scale(1.3);
+    /* Visual increase */
 }
 
 /* Creator & Agent Section */
@@ -1423,9 +1425,17 @@ footer {
 }
 
 .powered-by {
-    font-size: 0.8rem;
-    color: #a1a1aa;
-    /* Light grey text */
+    font-size: 0.7rem;
+    color: #4d96ff;
+    /* Brand Blue */
+    font-family: 'Pixelify Sans', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.05rem;
+    margin-left: auto;
+    text-align: right;
+    max-width: 50%;
+    /* Prevent it from taking over too much space */
+    line-height: 1.2;
 }
 
 .coming-soon {
@@ -1450,21 +1460,14 @@ footer {
 }
 
 /* Recall Pear Image */
-.recall-pear-image {
-    width: 250px;
-    height: auto;
-    display: block;
-    margin: 3rem auto 0 auto;
-    opacity: 0.9;
-}
-
 /* Recall Star Image */
 .recall-star-image {
-    width: 250px;
+    width: 200px;
     height: auto;
     display: block;
-    margin: 3rem auto 0 auto;
+    margin: 2rem auto 0 auto;
     opacity: 0.9;
+    transform: scale(1.3) translateY(2rem);
 }
 
 /* Replay Play Image */
@@ -1474,6 +1477,7 @@ footer {
     display: block;
     margin: 3rem auto 0 auto;
     opacity: 0.9;
+    transform: scale(1.7) translateY(1rem);
 }
 
 /* Short Card Modifier */
@@ -1638,4 +1642,62 @@ footer {
     .highlight-image-side {
         min-height: 300px;
     }
+}
+
+.dashboard-mockup {
+    background-image: url('engram_pixel_space_wide.png') !important;
+    background-size: 100% 100% !important;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 12px;
+    background-color: #f9fafb !important;
+    position: relative;
+    /* Ensure absolute children are positioned relative to this */
+}
+
+#game-score {
+    position: absolute;
+    top: 25px;
+    left: 30px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    color: #374151;
+    /* Light/Mid Grey */
+    text-transform: uppercase;
+    z-index: 20;
+    /* Ensure on top of canvas */
+    pointer-events: none;
+    /* Let clicks pass through */
+}
+
+#hero-game-canvas {
+    background: transparent !important;
+}
+
+.game-controls {
+    position: absolute;
+    bottom: 25px;
+    right: 30px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: #374151;
+    /* Light/Mid Grey to match score */
+    z-index: 20;
+}
+
+.game-controls ion-icon {
+    font-size: 1.2rem;
+}
+
+.key-space {
+    font-size: 0.8rem;
+    border: 1px solid #374151;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    font-weight: 500;
+    letter-spacing: 0.1em;
 }
