@@ -652,11 +652,11 @@ h1 {
         height: auto;
     }
 
-    #game-score {
-        font-size: 0.55rem;
-        padding: 0.25rem 0.5rem;
-        top: 3px;
-        left: 2px;
+    div#game-score {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
     }
 
     .game-header {
