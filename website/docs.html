@@ -11,7 +11,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Akshar:wght@300..700&family=Inter:wght@300;400;500;600&family=Montserrat:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Pixelify+Sans:wght@400..700&family=Press+Start+2P&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=219">
+    <link rel="stylesheet" href="style.css?v=221">
     <!-- Ionicons -->
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
 </head>
@@ -53,15 +53,14 @@
 
         <section class="legal-content">
             <h1>Documentation</h1>
-            <p class="intro">Welcome to Engram information central. Here you'll find everything you need to set up your
-                local coding companion.</p>
+            <p class="intro">Everything you need to get started with Engram, your local-first code memory companion.</p>
 
             <div class="policy-section">
                 <h3>Installation</h3>
                 <p>Engram is distributed as a VS Code extension. To install:</p>
                 <ol style="margin-left: 1.5rem; margin-top: 1rem; color: #555; line-height: 1.6;">
                     <li>Open <strong>Visual Studio Code</strong>.</li>
-                    <li>Go to the <strong>Extensions</strong> view (Ctrl+Shift+X).</li>
+                    <li>Go to the <strong>Extensions</strong> view (Ctrl+Shift+X or Cmd+Shift+X).</li>
                     <li>Search for "Engram".</li>
                     <li>Click <strong>Install</strong>.</li>
                 </ol>
@@ -69,22 +68,66 @@
 
             <div class="policy-section">
                 <h3>First Run</h3>
-                <p>After installing, open a folder or workspace. Engram will automatically prompt you to start
-                    indexing. This process runs locally and creates the semantic map needed for context retrieval.</p>
-                <p style="margin-top: 1rem;">Depending on your codebase size, this may take a few minutes. You can
-                    continue working while indexing happens in the background.</p>
+                <p>After installing, Engram activates automatically when you open VS Code. It runs in the background and
+                    starts tracking your coding patterns immediately—no configuration needed.</p>
+                <p style="margin-top: 1rem;">All data is stored locally in your workspace storage. Nothing is uploaded
+                    to external servers.</p>
             </div>
 
             <div class="policy-section">
-                <h3>Features</h3>
+                <h3>Core Features</h3>
                 <ul style="margin-left: 1.5rem; margin-top: 1rem; color: #555; line-height: 1.6;">
-                    <li style="margin-bottom: 0.5rem;"><strong>Semantic Retrieval</strong>: Instantly find code logic
-                        based on meaning, not just exact keywords.</li>
-                    <li style="margin-bottom: 0.5rem;"><strong>Ollama Integration</strong>: Connect to local LLMs to
-                        chat with your codebase without data leaving your machine.</li>
-                    <li><strong>Instant Context</strong>: Automatically surface relevant documentation and
-                        implementation details while you type.</li>
+                    <li style="margin-bottom: 0.5rem;"><strong>Mistake Detection</strong>: Automatically fingerprints
+                        errors and warnings you encounter. When you repeat a mistake, Engram warns you and shows how you
+                        fixed it before.</li>
+                    <li style="margin-bottom: 0.5rem;"><strong>Paste Tracking</strong>: Detects when you paste code and
+                        tracks snippet reuse. Get notified when you've used the same snippet multiple times.</li>
+                    <li style="margin-bottom: 0.5rem;"><strong>Security Scanner</strong>: Real-time scanning for
+                        dangerous patterns like hardcoded secrets, eval usage, and SQL injection risks. Warnings appear
+                        inline as you paste code.</li>
+                    <li style="margin-bottom: 0.5rem;"><strong>Prompt Timeline</strong>: View your prompt history in the
+                        sidebar. Track which prompts led to successful or failed sessions.</li>
+                    <li style="margin-bottom: 0.5rem;"><strong>Memory Cards</strong>: Hover over warnings to see
+                        contextual memory cards showing when you last encountered this issue and how you fixed it.</li>
                 </ul>
+            </div>
+
+            <div class="policy-section">
+                <h3>Sensitivity Control</h3>
+                <p>Click the shield icon in the status bar to toggle between two sensitivity modes:</p>
+                <ul style="margin-left: 1.5rem; margin-top: 1rem; color: #555; line-height: 1.6;">
+                    <li style="margin-bottom: 0.5rem;"><strong>Breeze</strong> (Quiet): Only warns when you've made the
+                        same mistake 3+ times. Shows only critical security issues.</li>
+                    <li><strong>Strict</strong> (Audible): Warns after 2+ occurrences of a mistake. Shows all security
+                        warnings.</li>
+                </ul>
+            </div>
+
+            <div class="policy-section">
+                <h3>Commands</h3>
+                <p>Access Engram commands via the Command Palette (Ctrl+Shift+P or Cmd+Shift+P):</p>
+                <ul style="margin-left: 1.5rem; margin-top: 1rem; color: #555; line-height: 1.6;">
+                    <li style="margin-bottom: 0.5rem;"><strong>Engram: Search Snippets</strong> - Browse and reuse
+                        previously pasted code snippets</li>
+                    <li style="margin-bottom: 0.5rem;"><strong>Engram: Log Prompt</strong> - Manually log a prompt and
+                        check for similarity to past failures</li>
+                    <li style="margin-bottom: 0.5rem;"><strong>Engram: Mark Failure</strong> - Mark the current session
+                        as failed for future reference</li>
+                    <li><strong>Engram: Exclude this File</strong> - Exclude the current file from Engram tracking</li>
+                </ul>
+            </div>
+
+            <div class="policy-section">
+                <h3>Storage Location</h3>
+                <p>All Engram data is stored locally in your VS Code workspace storage:</p>
+                <ul style="margin-left: 1.5rem; margin-top: 1rem; color: #555; line-height: 1.6;">
+                    <li><strong>Mistakes</strong>: <code>.vscode/engram/mistakes/</code></li>
+                    <li><strong>Snippets</strong>: <code>.vscode/engram/snippets/</code></li>
+                    <li><strong>Sessions</strong>: <code>.vscode/engram/vibe_sessions/</code></li>
+                    <li><strong>Security Exemptions</strong>: <code>.vscode/engram/exemptions/</code></li>
+                </ul>
+                <p style="margin-top: 1rem;">You can safely delete these folders to reset Engram's memory for a
+                    workspace.</p>
             </div>
         </section>
 

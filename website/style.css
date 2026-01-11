@@ -581,7 +581,7 @@ h1 {
     }
 
     h1 {
-        font-size: 1.8rem;
+        font-size: 1.5rem;
         letter-spacing: -1px;
         margin-bottom: 1.5rem;
         padding: 0 1rem;
@@ -589,7 +589,7 @@ h1 {
     }
 
     .subtitle {
-        font-size: 1rem;
+        font-size: 0.9rem;
         padding: 0 1.5rem;
         margin-bottom: 2rem;
     }
