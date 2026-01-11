@@ -85,74 +85,83 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Navigation Pill Logic
+    // Responsive Carousel Logic for "Keep Your Flow"
+    const carouselContainer = document.getElementById('flow-carousel');
     const navPrev = document.getElementById('nav-prev');
     const navNext = document.getElementById('nav-next');
-    const slide1 = document.getElementById('card-slide-1');
-    const slide2 = document.getElementById('card-slide-2');
 
-    console.log('Nav Elements:', { navPrev, navNext, slide1, slide2 });
+    if (carouselContainer && navPrev && navNext) {
+        const cards = Array.from(carouselContainer.children).filter(child =>
+            child.classList.contains('creator-card') || child.classList.contains('agent-card')
+        );
 
-    if (navPrev && navNext && slide1 && slide2) {
-        let isAnimating = false;
-        // Initialize state based on initial visibility
-        // If JS loads late, slide 2 might be hidden via CSS. Assume slide 1 is active.
-        let activeSlide = 1;
+        let currentIndex = 0;
 
-        const toggleSlides = (direction) => {
-            if (isAnimating) return;
-
-            console.log('State before toggle:', { activeSlide, direction });
-
-            let shouldSwitch = false;
-
-            // Strict Logic:
-            // Next (Right Arrow) -> Only valid if Active Slide is 1 (Switch to 2)
-            // Prev (Left Arrow) -> Only valid if Active Slide is 2 (Switch to 1)
-
-            if (direction === 'next' && activeSlide === 1) {
-                shouldSwitch = true;
-            } else if (direction === 'prev' && activeSlide === 2) {
-                shouldSwitch = true;
-            }
-
-            if (!shouldSwitch) {
-                console.log('Navigation ignored: already on requested side');
-                return;
-            }
-
-            isAnimating = true;
-
-            const currentSlide = activeSlide === 1 ? slide1 : slide2;
-            const nextSlide = activeSlide === 1 ? slide2 : slide1;
-
-            // Update state immediately to reflect target state
-            activeSlide = activeSlide === 1 ? 2 : 1;
-
-            console.log(`Executing Switch to Slide ${activeSlide}`);
-
-            // 1. Animate Out
-            currentSlide.classList.add('animate-out');
-
-            currentSlide.addEventListener('animationend', () => {
-                currentSlide.classList.remove('animate-out');
-                currentSlide.style.display = 'none';
-
-                // 2. Prepare Next Slide
-                nextSlide.style.display = 'grid'; // Ensure grid
-                nextSlide.classList.add('animate-in');
-
-                nextSlide.addEventListener('animationend', () => {
-                    nextSlide.classList.remove('animate-in');
-                    isAnimating = false;
-                }, { once: true });
-
-            }, { once: true });
+        const getItemsPerPage = () => {
+            return window.innerWidth <= 768 ? 1 : 2;
         };
 
-        navPrev.addEventListener('click', () => toggleSlides('prev'));
-        navNext.addEventListener('click', () => toggleSlides('next'));
-    } else {
-        console.error('Navigation elements not found!');
+        const updateVisibility = () => {
+            const perPage = getItemsPerPage();
+
+            // Safety check: ensure index allows for full page view if possible
+            // But since we want simple paging:
+            // Desktop: 0, 2
+            // Mobile: 0, 1, 2, 3
+
+            cards.forEach((card, index) => {
+                if (index >= currentIndex && index < currentIndex + perPage) {
+                    card.style.display = 'flex'; // Restore display
+                    // Add animation class if needed, or just let it appear
+                    card.classList.add('animate-in');
+                } else {
+                    card.style.display = 'none';
+                    card.classList.remove('animate-in');
+                }
+            });
+        };
+
+        const nextSlide = () => {
+            const perPage = getItemsPerPage();
+            // Calculate max index
+            // If 4 items, perPage 2: starts at 0, 2. Max valid start is 2.
+            // If 4 items, perPage 1: starts at 0, 1, 2, 3. Max valid start is 3.
+
+            if (currentIndex + perPage < cards.length) {
+                currentIndex += perPage;
+            } else {
+                currentIndex = 0; // Loop back to start
+            }
+            updateVisibility();
+        };
+
+        const prevSlide = () => {
+            const perPage = getItemsPerPage();
+
+            if (currentIndex - perPage >= 0) {
+                currentIndex -= perPage;
+            } else {
+                // Loop to end
+                // If length 4, perPage 2: should go to 2.
+                // If length 4, perPage 1: should go to 3.
+
+                // Formula to find last page start:
+                currentIndex = Math.floor((cards.length - 1) / perPage) * perPage;
+            }
+            updateVisibility();
+        };
+
+        navNext.addEventListener('click', nextSlide);
+        navPrev.addEventListener('click', prevSlide);
+
+        // Initial Render
+        updateVisibility();
+
+        // Handle Resize
+        window.addEventListener('resize', () => {
+            // Reset to start on resize to avoid index issues types
+            currentIndex = 0;
+            updateVisibility();
+        });
     }
 });

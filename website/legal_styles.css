@@ -1,0 +1,34 @@
+/* Legal Content */
+.legal-content {
+    max-width: 800px;
+    margin: 8rem auto 4rem;
+    padding: 0 5%;
+}
+
+.legal-content h1 {
+    font-size: 3rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: -0.03em;
+}
+
+.legal-content h3 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+}
+
+.legal-content p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+}
+
+.legal-content strong {
+    color: var(--text-primary);
+    font-weight: 600;
+}
