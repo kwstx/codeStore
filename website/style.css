@@ -607,7 +607,7 @@ h1 {
     }
 
     h1 {
-        font-size: 3.2rem;
+        font-size: 2.9rem;
         letter-spacing: -2px;
         margin-bottom: 1.5rem;
         padding: 0 1rem;
@@ -1080,6 +1080,19 @@ h1 {
 
     .products-header h2 {
         font-size: 3.5rem;
+    }
+
+    .memory-brain-image {
+        margin-left: 2rem;
+    }
+
+    .recall-star-image {
+        margin-top: -4.5rem;
+        transform: scale(0.85);
+    }
+
+    .replay-play-image {
+        transform: scale(0.85);
     }
 }
 
@@ -2048,7 +2061,7 @@ footer {
 @media (max-width: 768px) {
     .mobile-controls {
         display: flex !important;
-        font-size: 0.4rem;
+        font-size: 0.35rem;
         letter-spacing: 0.05rem;
         font-weight: 600;
         /* create distinct positioning for mobile text */
