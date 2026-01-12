@@ -63,6 +63,21 @@ body {
     /* Default sans */
     overflow-x: hidden;
     min-height: 100vh;
+    cursor: url('cursor-auto.png'), auto;
+}
+
+a,
+button,
+.clickable,
+input[type="submit"],
+input[type="button"],
+label[for],
+select,
+.btn-nav-outline,
+.btn-black,
+.social-icons a,
+.game-controls ion-icon {
+    cursor: url('cursor-pointer.png'), pointer;
 }
 
 /* Nav */
