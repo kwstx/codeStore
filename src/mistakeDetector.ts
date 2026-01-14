@@ -4,6 +4,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import { MistakeFingerprint, MistakeFix, MemoryCard } from './types';
+const safe = require('safe-regex');
 
 export class MistakeDetector {
     private static instance: MistakeDetector;
@@ -41,6 +42,47 @@ export class MistakeDetector {
             this.fingerprints.set(fingerprint.id, fingerprint);
             this.saveFingerprints();
         }
+    }
+
+
+    public async importRules(rules: MistakeFingerprint[]): Promise<number> {
+        let imported = 0;
+        let rejected = 0;
+
+        rules.forEach(rule => {
+            // ReDoS Check
+            if (rule.detectionMethod === 'regex' || (rule.pattern.startsWith('/') && rule.pattern.lastIndexOf('/') > 0)) {
+                // Strip slashes for check
+                let pattern = rule.pattern;
+                if (pattern.startsWith('/')) {
+                    const lastSlash = pattern.lastIndexOf('/');
+                    pattern = pattern.substring(1, lastSlash);
+                }
+
+                if (!safe(pattern)) {
+                    console.warn(`[MistakeDetector] Rejected unsafe regex: ${rule.pattern}`);
+                    rejected++;
+                    return; // Skip this rule
+                }
+            }
+
+            // Overwrite or Merge? Ideally merge, but for starter kit we want to ensure they exist.
+            // We'll prioritize existing user data (count) if ID matches?
+            // For now, simpler: If doesn't exist, add it. If exists, skip (to preserve user's learning).
+            if (!this.fingerprints.has(rule.id)) {
+                this.fingerprints.set(rule.id, rule);
+                imported++;
+            }
+        });
+
+        if (rejected > 0) {
+            console.log(`[MistakeDetector] Refused ${rejected} unsafe / complex regexes.`);
+        }
+
+        if (imported > 0) {
+            await this.saveFingerprints();
+        }
+        return imported;
     }
 
     public init(storagePath: string) {

@@ -2,50 +2,62 @@
 
 **The gateway to code memory.**
 
-Engram is a local-first VS Code extension that creates a semantic index of your codebase, allows for instant context retrieval, and keeps your flow state unbroken. It acts as a privacy-first "smart memory" for your development workflow.
+Engram is a privacy-first "Shadow Guard" for your AI coding workflow. It creates a semantic memory of your past mistakes and proactively injects them into your AI tools (Cursor, Copilot, Cline) to prevent them continuously.
+
+![Shadow Guard Demo](images/shadow_guard.png)
+
+## Why Engram?
+
+Most AI tools have amnesia. They make the same mistake today that you fixed yesterday.
+*   **SonarLint** simply catches syntax errors. It doesn't know *your* history or specific project constraints.
+*   **Cloud Tools** require sending your code to external servers. Engram is **100% Local**.
+*   **Engram** remembers. It watches your workflow, learns your specific pain points, and stops the AI from repeating them.
+
+"Saved me 2 hours on a Copilot regression where it kept using a deprecated API I explicitly moved away from last week." - Early User
 
 ## Core Capabilities
 
-### Prompt Tracker & Context Memory
-Visualize your thought process. Engram tracks and versions prompt iterations, helping you understand the "why" behind your code changes.
-*   **Automatic indexing** of prompts and intent.
-*   **Searchable history** of your coding decisions.
+### AI Whisperer (Context Injection)
+Don't just fix mistakes, teach your AI to avoid them. Engram translates your repetitive errors into natural language rules.
+*   **Universal Support**: Automatically updates configuration files for Cursor and Copilot.
+*   **Smart Copy**: Wraps your code with relevant mistake history when pasting into ChatGPT.
+*   **Prompt Injection Defense**: Sanitizes all context to ensure security.
+
+### The Shadow Guard (Real-Time Policing)
+A firewall for AI-generated code.
+*   **Honeymoon Mode**: New mistakes are shown as subtle Info warnings (Blue), giving you a chance to fix them without interruption.
+*   **Strict Enforcement**: Promote rules to "Blockers" (Red) only when you need absolute compliance.
+*   **Interactive Triage**: Quickly ignore rules for specific file types (like tests) with a single click.
 
 ### Mistake Shield
-Fingerprint your errors. Engram remembers what broke previously so you don't repeat the same mistakes.
-*   **Active warning system** when you are about to repeat a known bad pattern.
-*   **Confidence Control**: Toggle between "Breeze" (Quiet) and "Strict" (Audible) sensitivity modes.
-
-### Smart Recall
-Cross-tool memory. Automatically link pasted code back to its original prompt.
-*   **Instant context** for pasted snippets.
-*   **Pattern matching** to find similar solutions in your history.
-
-### Security Vibe Check
-Real-time scanning. Catch secrets and risky patterns before they run.
-*   **Inline warnings** for dangerous patterns (secrets, eval).
-*   **Context Aware**: Intelligently ignores comments and string literals to reduce noise.
-*   **Informed Overrides**: Dismiss warnings with a reason.
-
-### Contextual Memory Cards
-"Explain the Warning." Engram turns generic error messages into personalized history lessons.
-*   **Historical Context**: Hover over a warning to see *when* you last encountered it.
-*   **AI Diff Analysis**: Explains *how* you fixed similar errors previously ("Replaced X with Y").
-*   **Action Tracking**: Reminds you of past fixes.
-
-## Privacy First
-**100% Local Processing.**
-Your code and patterns never leave your machine. Engram uses local logic and storage to ensure total privacy.
+*   **Active Warning System**: Detects when you are about to repeat a known bad pattern.
+*   **Memory Cards**: Hover over any warning to see exactly when this mistake happened before and how you fixed it.
 
 ## Quick Start
 
 1.  **Install** the extension.
-2.  **Start coding!** Engram indexes your workflow in the background.
-3.  **Check the Status Bar**: Click the Shield icon to toggle Sensitivity (Breeze/Strict).
-4.  **Hover over warnings** to see Memory Cards and AI Analysis.
+2.  **Code** as usual. Engram learns quietly in the background.
+3.  **Paste** smarter. Use "Engram: Smart Copy" when asking AI for help.
+4.  **Refine**. Use the blue "Shadow Guard" warnings to tune your rules.
 
-## Links
+## FAQ
 
+**Q: Does my code leave my computer?**
+A: No. Engram is 100% local. All embeddings, rules, and logic run on your machine.
+
+**Q: Will it slow down my editor?**
+A: No. The Shadow Guard uses a debounced background process (500ms) to ensure it never blocks your typing.
+
+**Q: Can I share my rules?**
+A: Yes! Use `Engram: Import Rules` to load any JSON rule pack. Check out our [Starter Kit](https://github.com/kwstx/Engram) for free bug patterns.
+
+## Community & Extensibility
+Engram is designed to be hacked.
+*   **Rule Starter Kit**: Run `Engram: Load Starter Kit` to instantly block common bugs (Console logs in prod, AWS Keys, etc).
+*   **Build Your Own**: Export your `fingerprints.json` and share it with your team.
+*   **Open Source**: Contribute your best patterns to our [GitHub Repo](https://github.com/kwstx/Engram).
+
+## Support
 *   [Website](https://use-engram.vercel.app)
 *   [Repository](https://github.com/kwstx/Engram)
 *   [Privacy Policy](https://use-engram.vercel.app/privacy.html)

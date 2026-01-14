@@ -1,0 +1,59 @@
+[
+    {
+        "id": "starter-console-log",
+        "language": "javascript",
+        "detectionMethod": "regex",
+        "pattern": "console\\.log\\(",
+        "count": 5,
+        "lastSeen": 0,
+        "enforcementLevel": "info",
+        "fixes": [
+            {
+                "id": "fix-console",
+                "description": "Removed console.log for production",
+                "diff": "At line 1: Replaced \"console.log(...)\" with \"\"",
+                "timestamp": 0
+            }
+        ]
+    },
+    {
+        "id": "starter-secrets-aws",
+        "language": "unknown",
+        "detectionMethod": "regex",
+        "pattern": "(AKIA|ASIA)[A-Z0-9]{16}",
+        "count": 10,
+        "lastSeen": 0,
+        "enforcementLevel": "error",
+        "fixes": []
+    },
+    {
+        "id": "starter-react-key",
+        "language": "typescriptreact",
+        "detectionMethod": "regex",
+        "pattern": "key=\\{index\\}",
+        "count": 5,
+        "lastSeen": 0,
+        "enforcementLevel": "info",
+        "fixes": []
+    },
+    {
+        "id": "starter-dangerous-eval",
+        "language": "javascript",
+        "detectionMethod": "regex",
+        "pattern": "eval\\(",
+        "count": 5,
+        "lastSeen": 0,
+        "enforcementLevel": "error",
+        "fixes": []
+    },
+    {
+        "id": "starter-python-print",
+        "language": "python",
+        "detectionMethod": "regex",
+        "pattern": "print\\(",
+        "count": 3,
+        "lastSeen": 0,
+        "enforcementLevel": "silent",
+        "fixes": []
+    }
+]

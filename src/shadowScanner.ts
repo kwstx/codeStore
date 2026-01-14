@@ -68,7 +68,10 @@ export class ShadowScanner {
                     const source = fp.pattern.substring(1, lastSlash);
                     regex = new RegExp(source, flags.includes('g') ? flags : flags + 'g');
                 } else if (fp.detectionMethod === 'regex') {
-                    // Treat as string literal or simple regex
+                    // Treat as raw regex (do not escape)
+                    regex = new RegExp(fp.pattern, 'g');
+                } else {
+                    // Default: Literal string match
                     regex = new RegExp(this.escapeRegExp(fp.pattern), 'g');
                 }
             } catch (e) {

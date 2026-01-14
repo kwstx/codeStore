@@ -22,6 +22,29 @@ export async function activate(context: vscode.ExtensionContext) {
     EmbeddingService.getInstance();
     ExclusionManager.getInstance().setContext(context);
 
+    // --- RATING PROMPT ---
+    const installDate = context.globalState.get<number>('engramInstallDate');
+    const hasRated = context.globalState.get<boolean>('engramHasRated', false);
+
+    if (!installDate) {
+        context.globalState.update('engramInstallDate', Date.now());
+    } else if (!hasRated) {
+        const threeDays = 3 * 24 * 60 * 60 * 1000;
+        if (Date.now() - installDate > threeDays) {
+            vscode.window.showInformationMessage(
+                "Engram has been guarding your workflow for 3 days. Has it saved you time?",
+                "Yes, Rate It", "Not Yet", "Don't Ask Again"
+            ).then(selection => {
+                if (selection === "Yes, Rate It") {
+                    vscode.env.openExternal(vscode.Uri.parse('https://marketplace.visualstudio.com/items?itemName=use-engram.engram&ssr=false#review-details'));
+                    context.globalState.update('engramHasRated', true);
+                } else if (selection === "Don't Ask Again") {
+                    context.globalState.update('engramHasRated', true);
+                }
+            });
+        }
+    }
+
     // Start Mistake Detection
     const detector = MistakeDetector.getInstance();
     if (context.storageUri) {
@@ -351,7 +374,76 @@ export async function activate(context: vscode.ExtensionContext) {
     });
     context.subscriptions.push(excludeDisposable);
 
-    console.log('[Engram] Activated (Features: Mistake Shield, Memory Cards, Snippet Reuse).');
+    // Command: Import Rules (JSON)
+    let importRulesDisposable = vscode.commands.registerCommand('engram.importRules', async () => {
+        const uris = await vscode.window.showOpenDialog({
+            canSelectMany: false,
+            filters: { 'JSON': ['json'] },
+            openLabel: 'Import Rules'
+        });
+
+        if (uris && uris[0]) {
+            try {
+                const content = await vscode.workspace.fs.readFile(uris[0]);
+                const rules = JSON.parse(new TextDecoder().decode(content));
+                if (Array.isArray(rules)) {
+                    const count = await detector.importRules(rules);
+                    vscode.window.showInformationMessage(`Successfully imported ${count} new rules into Engram.`);
+                    shadowScanner.updateDiagnostics(); // Refresh
+                } else {
+                    vscode.window.showErrorMessage('Invalid file format. Expected an array of rules.');
+                }
+            } catch (e) {
+                vscode.window.showErrorMessage(`Failed to import rules: ${e}`);
+            }
+        }
+    });
+    context.subscriptions.push(importRulesDisposable);
+
+    // Command: Load Starter Kit
+    let starterKitDisposable = vscode.commands.registerCommand('engram.loadStarterKit', async () => {
+        try {
+            const kitPath = path.join(context.extensionPath, 'src', 'starter_kit.json');
+            // Check if exists (dev mode vs prod mode issues?) 
+            // In prod, 'src' might not exist in the same way. 
+            // We should ideally bundle it or read it from 'out' or root.
+            // For resilience, let's try root/src or just assume it's bundled.
+            // A safer bet for now is to just inline the data OR make sure we copy it.
+            // Note: We need to ensure starter_kit.json is copied to 'out' or 'dist' in a real build.
+            // For this environment, we'll read it from where we wrote it.
+
+            // Simpler: Just define it inline to avoid FS issues in build?
+            // "Hack Engram" spirit prefers external file, but reliability prefers inline.
+            // Let's use the file but fallback to reading it via 'require' if possible, or just fs.
+            // Wait, we are in 'out/extension.js' usually. 'src' is sibling in dev.
+
+            // Re-use logic: Ask user if they confirm?
+            const selection = await vscode.window.showInformationMessage(
+                "Load 'Engram Starter Kit'? (Includes checks for Secrets, Console Logs, and React Keys)",
+                "Yes, Load It", "Cancel"
+            );
+
+            if (selection === "Yes, Load It") {
+                // Read via FS
+                // We wrote it to src/starter_kit.json.
+                // In extension mode: context.extensionPath/src/starter_kit.json
+                const kitUri = vscode.Uri.file(path.join(context.extensionPath, 'src', 'starter_kit.json'));
+                // Note: User needs to ensure this file is included in VSIX. 
+                // I will add it to package.json files/vsceignore later. 
+
+                const content = await vscode.workspace.fs.readFile(kitUri);
+                const rules = JSON.parse(new TextDecoder().decode(content));
+                const count = await detector.importRules(rules);
+                vscode.window.showInformationMessage(`Starter Kit Loaded! Added ${count} rules.`);
+                shadowScanner.updateDiagnostics();
+            }
+        } catch (e) {
+            vscode.window.showErrorMessage(`Could not load Starter Kit: ${e}`);
+        }
+    });
+    context.subscriptions.push(starterKitDisposable);
+
+    console.log('[Engram] Activated (Features: Mistake Shield, Memory Cards, Starter Kit).');
 }
 
 export function deactivate() { }

@@ -3,7 +3,7 @@
   "displayName": "Engram",
   "description": "The gateway to code memory. A privacy-first VS Code extension that indexes your prompt history and prevents repeated mistakes.",
   "readme": "README.md",
-  "version": "1.0.0",
+  "version": "1.1.5",
   "publisher": "use-engram",
   "icon": "images/icon.png",
   "engines": {
@@ -14,7 +14,19 @@
     "url": "https://github.com/kwstx/Engram"
   },
   "categories": [
-    "Other"
+    "Other",
+    "Programming Languages",
+    "Machine Learning",
+    "Education"
+  ],
+  "keywords": [
+    "ai-bug-prevention",
+    "vibe-coding",
+    "memory",
+    "copilot-guard",
+    "local-privacy",
+    "shadow-guard",
+    "cursor-rules"
   ],
   "activationEvents": [
     "onStartupFinished"
@@ -29,6 +41,14 @@
       {
         "command": "engram.excludeFile",
         "title": "Engram: Exclude this File"
+      },
+      {
+        "command": "engram.importRules",
+        "title": "Engram: Import Rules (JSON)"
+      },
+      {
+        "command": "engram.loadStarterKit",
+        "title": "Engram: Load Starter Kit (Common Bugs)"
       }
     ],
     "configuration": {
@@ -72,6 +92,7 @@
     "@types/diff": "^7.0.2",
     "@xenova/transformers": "^2.14.0",
     "diff": "^8.0.2",
+    "safe-regex": "^2.1.1",
     "uuid": "^11.0.4",
     "vectordb": "^0.4.5"
   }
