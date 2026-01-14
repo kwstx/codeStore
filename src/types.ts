@@ -40,6 +40,8 @@ export interface MistakeFingerprint {
     lastSeen: number; // Timestamp
     fixes?: MistakeFix[]; // List of recorded fixes
     ignored?: boolean; // User manually dismissed this warning
+    enforcementLevel?: 'silent' | 'info' | 'error'; // Shadow Guard level
+    ignoredScopes?: string[]; // Glob patterns to ignore (e.g. *.test.ts)
 }
 
 export interface CodeSnippet {

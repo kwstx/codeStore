@@ -36,6 +36,13 @@ export class MistakeDetector {
         return Array.from(this.fingerprints.values());
     }
 
+    public updateFingerprint(fingerprint: MistakeFingerprint) {
+        if (this.fingerprints.has(fingerprint.id)) {
+            this.fingerprints.set(fingerprint.id, fingerprint);
+            this.saveFingerprints();
+        }
+    }
+
     public init(storagePath: string) {
         if (this.initialized) return;
         this.storagePath = storagePath;

@@ -7,6 +7,8 @@ import { MistakeDetector } from './mistakeDetector';
 import { PasteDetector } from './pasteDetector';
 import { ContextInjector } from './contextInjector';
 import { SmartClipboard } from './smartClipboard';
+import { ShadowScanner } from './shadowScanner';
+import { ShadowCodeActionProvider } from './ui/ShadowCodeActionProvider';
 import { MistakeCodeLensProvider } from './ui/MistakeCodeLensProvider';
 import { SnippetStore } from './snippetStore';
 import { MemoryCardProvider } from './ui/MemoryCardProvider';
@@ -70,6 +72,40 @@ export async function activate(context: vscode.ExtensionContext) {
         await statusBarController.toggle();
     });
     context.subscriptions.push(toggleSensitivityDisposable);
+
+    // --- SHADOW GUARD ---
+    const shadowScanner = ShadowScanner.getInstance();
+    shadowScanner.startListening(context);
+
+    // Code Actions
+    context.subscriptions.push(
+        vscode.languages.registerCodeActionsProvider(
+            { scheme: 'file' },
+            new ShadowCodeActionProvider(),
+            { providedCodeActionKinds: ShadowCodeActionProvider.providedCodeActionKinds }
+        )
+    );
+
+    // Commands for Code Actions
+    context.subscriptions.push(vscode.commands.registerCommand('engram.updateRuleLevel', (ruleId, level) => {
+        const fp = detector.getFingerprint(ruleId);
+        if (fp) {
+            fp.enforcementLevel = level;
+            detector.updateFingerprint(fp); // Need to expose update method or modify reference
+            shadowScanner.updateDiagnostics();
+            console.log(`[ShadowGuard] Rule ${ruleId} updated to ${level}`);
+        }
+    }));
+
+    context.subscriptions.push(vscode.commands.registerCommand('engram.addRuleScopeException', (ruleId, scope) => {
+        const fp = detector.getFingerprint(ruleId);
+        if (fp) {
+            if (!fp.ignoredScopes) fp.ignoredScopes = [];
+            fp.ignoredScopes.push(scope);
+            shadowScanner.updateDiagnostics();
+            console.log(`[ShadowGuard] Rule ${ruleId} ignored for ${scope}`);
+        }
+    }));
 
     // Connect Paste Detector to Snippet Store (Reuse Only, No Security Check)
     const pasteDisposable = PasteDetector.getInstance().onPasteDetected(async (event) => {
