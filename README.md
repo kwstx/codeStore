@@ -58,6 +58,6 @@ Engram is designed to be hacked.
 *   **Open Source**: Contribute your best patterns to our [GitHub Repo](https://github.com/kwstx/Engram).
 
 ## Support
-*   [Website](https://use-engram.vercel.app)
+*   [Website](https://www.useengram.com/)
 *   [Repository](https://github.com/kwstx/Engram)
-*   [Privacy Policy](https://use-engram.vercel.app/privacy.html)
+*   [Privacy Policy](https://www.useengram.com/privacy.html)
