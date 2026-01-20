@@ -74,6 +74,11 @@
           "default": false,
           "description": "Enable 'Gladiator Arena' (Beta): Spawn two models to debate the solution."
         },
+        "engram.experimental.optInDuel": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable 'Opt-In Duel' (Beta): Shows a 'Challenge' button above code blocks to trigger Gladiator critique."
+        },
         "engram.experimental.secondaryModel": {
           "type": "string",
           "default": "qwen2.5:0.5b",

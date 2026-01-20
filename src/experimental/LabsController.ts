@@ -21,6 +21,10 @@ export class LabsController {
         return vscode.workspace.getConfiguration('engram').get<boolean>('experimental.gladiatorMode', false);
     }
 
+    public isOptInDuelEnabled(): boolean {
+        return vscode.workspace.getConfiguration('engram').get<boolean>('experimental.optInDuel', false);
+    }
+
     public getSecondaryModel(): string {
         return vscode.workspace.getConfiguration('engram').get<string>('experimental.secondaryModel', 'qwen2.5:0.5b');
     }

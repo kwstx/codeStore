@@ -13,6 +13,9 @@ import { MistakeCodeLensProvider } from './ui/MistakeCodeLensProvider';
 import { SnippetStore } from './snippetStore';
 import { MemoryCardProvider } from './ui/MemoryCardProvider';
 import { StatusBarController } from './ui/StatusBarController';
+import { LabsController } from './experimental/LabsController';
+import { GladiatorCodeLensProvider } from './experimental/GladiatorCodeLensProvider';
+import { GladiatorArena } from './experimental/gladiator';
 
 export async function activate(context: vscode.ExtensionContext) {
     const logger = Logger.getInstance();
@@ -79,6 +82,31 @@ export async function activate(context: vscode.ExtensionContext) {
         detector.init(path.join(context.globalStorageUri.fsPath, 'mistakes'));
     }
     detector.startListening(context);
+
+    // [LABS] Beta Features - Opt-In Duel
+    if (LabsController.getInstance().isOptInDuelEnabled()) {
+        context.subscriptions.push(
+            vscode.languages.registerCodeLensProvider({ scheme: 'file' }, new GladiatorCodeLensProvider())
+        );
+    }
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('engram.gladiatorChallenge', async (document: vscode.TextDocument, range: vscode.Range) => {
+            const code = document.getText(range);
+            vscode.window.showInformationMessage("⚔️ Gladiator is critiquing your code...");
+
+            const critique = await GladiatorArena.critiqueCode(code);
+
+            if (critique) {
+                const edit = new vscode.WorkspaceEdit();
+                const insertPos = new vscode.Position(range.end.line + 1, 0);
+                edit.insert(document.uri, insertPos, critique);
+                await vscode.workspace.applyEdit(edit);
+            } else {
+                vscode.window.showWarningMessage("Gladiator failed to generate critique (Check Ollama).");
+            }
+        })
+    );
 
     // Initialize Context Injector (AI Whisperer)
     const contextInjector = ContextInjector.getInstance();

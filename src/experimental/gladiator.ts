@@ -35,4 +35,40 @@ export class GladiatorArena {
         }
         return "";
     }
+    public static async critiqueCode(code: string): Promise<string> {
+        const controller = LabsController.getInstance();
+        const model = controller.getSecondaryModel();
+
+        try {
+            const prompt = `You are "The Gladiator", a ruthless code critic.
+            The user has provided this code snippet:
+            
+            ${code.substring(0, 1000)}
+
+            Analyze it for performance, security, or style issues.
+            If it is good, say "NO WEAKNESS DETECTED."
+            If it is flawed, write a BETTER version.
+
+            Start your response with "// GLADIATOR CRITIQUE:"
+            Code:`;
+
+            const response = await fetch('http://localhost:11434/api/generate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    model: model,
+                    prompt: prompt,
+                    stream: false
+                })
+            });
+
+            if (response.ok) {
+                const data = await response.json() as { response: string };
+                return `\n\n<<<<<<< GLADIATOR CRITIQUE (${model}) >>>>>>>\n${data.response.trim()}\n<<<<<<< END CRITIQUE >>>>>>>`;
+            }
+        } catch (e) {
+            return "";
+        }
+        return "";
+    }
 }
