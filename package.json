@@ -49,8 +49,22 @@
       {
         "command": "engram.loadStarterKit",
         "title": "Engram: Load Starter Kit (Common Bugs)"
+      },
+      {
+        "command": "engram.gladiatorChallenge",
+        "title": "Challenge Selection (Gladiator)",
+        "category": "Engram"
       }
     ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "engram.gladiatorChallenge",
+          "when": "editorHasSelection && config.engram.experimental.optInDuel",
+          "group": "1_modification"
+        }
+      ]
+    },
     "configuration": {
       "type": "object",
       "title": "Engram",
