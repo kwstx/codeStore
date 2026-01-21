@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
 import { LabsController } from './experimental/LabsController';
-import { ParasocialHypeMan } from './experimental/hypeMan';
-import { GladiatorArena } from './experimental/gladiator';
+
 
 export class OllamaService {
     private static instance: OllamaService;
@@ -32,17 +31,7 @@ export class OllamaService {
     private async callLlm(prompt: string, timeout: number = 2000): Promise<string> {
         try {
 
-            // [LABS] Hype Man Trigger
-            if (LabsController.getInstance().isHypeManEnabled()) {
-                ParasocialHypeMan.trigger(prompt);
-            }
 
-            // [LABS] Gladiator Setup
-            const isGladiator = LabsController.getInstance().isGladiatorModeEnabled();
-            let gladiatorPromise: Promise<string> | null = null;
-            if (isGladiator) {
-                gladiatorPromise = GladiatorArena.challenge(prompt);
-            }
 
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), timeout);
@@ -67,11 +56,7 @@ export class OllamaService {
             const data = await response.json() as { response: string };
             let result = data.response.trim();
 
-            // [LABS] Gladiator Resolution
-            if (isGladiator && gladiatorPromise) {
-                const challenge = await gladiatorPromise;
-                result += challenge;
-            }
+
 
             return result;
 

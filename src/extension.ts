@@ -14,7 +14,12 @@ import { SnippetStore } from './snippetStore';
 import { MemoryCardProvider } from './ui/MemoryCardProvider';
 import { StatusBarController } from './ui/StatusBarController';
 import { LabsController } from './experimental/LabsController';
-import { GladiatorArena } from './experimental/gladiator';
+
+import { ShadowIntuition } from './experimental/IntuitionService';
+import { PhotographerService } from './experimental/PhotographerService';
+import { flashbackCommand } from './experimental/FlashbackCommand';
+import { HippocampusService } from './experimental/HippocampusService';
+import { ArchitectService } from './experimental/ArchitectService';
 
 export async function activate(context: vscode.ExtensionContext) {
     const logger = Logger.getInstance();
@@ -23,6 +28,18 @@ export async function activate(context: vscode.ExtensionContext) {
     // Initialize services
     EmbeddingService.getInstance();
     ExclusionManager.getInstance().setContext(context);
+
+    // Beta: Photographic Memory
+    // Beta: Photographic Memory
+    PhotographerService.getInstance().initialize(context);
+
+    // Beta: Hippocampus
+    HippocampusService.getInstance().initialize(context);
+
+    // Beta: The Architect (Command Registration)
+    context.subscriptions.push(vscode.commands.registerCommand('engram.architectPlan', async () => {
+        await ArchitectService.getInstance().generatePlan();
+    }));
 
     // --- RATING PROMPT ---
     const installDate = context.globalState.get<number>('engramInstallDate');
@@ -82,36 +99,19 @@ export async function activate(context: vscode.ExtensionContext) {
     }
     detector.startListening(context);
 
-    // [LABS] Beta Features - Opt-In Duel
-    // Triggered via Context Menu
 
-    context.subscriptions.push(
-        vscode.commands.registerCommand('engram.gladiatorChallenge', async () => {
-            const editor = vscode.window.activeTextEditor;
-            if (!editor) { return; }
 
-            const selection = editor.selection;
-            const code = editor.document.getText(selection);
+    // [LABS] Beta Features - Predictive Intuition
+    if (LabsController.getInstance().isPredictiveIntuitionEnabled()) {
+        const shadowIntuition = ShadowIntuition.getInstance();
+        shadowIntuition.startListening(context);
 
-            if (!code.trim()) {
-                vscode.window.showWarningMessage("Select some code to challenge first.");
-                return;
-            }
 
-            vscode.window.showInformationMessage("⚔️ Gladiator is critiquing your selection...");
 
-            const critique = await GladiatorArena.critiqueCode(code);
-
-            if (critique) {
-                const edit = new vscode.WorkspaceEdit();
-                const insertPos = new vscode.Position(selection.end.line + 1, 0);
-                edit.insert(editor.document.uri, insertPos, critique);
-                await vscode.workspace.applyEdit(edit);
-            } else {
-                vscode.window.showWarningMessage("Gladiator failed to generate critique (Check Ollama).");
-            }
-        })
-    );
+        context.subscriptions.push(
+            vscode.commands.registerCommand('engram.flashback', flashbackCommand)
+        );
+    }
 
     // Initialize Context Injector (AI Whisperer)
     const contextInjector = ContextInjector.getInstance();

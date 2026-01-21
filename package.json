@@ -51,20 +51,18 @@
         "title": "Engram: Load Starter Kit (Common Bugs)"
       },
       {
-        "command": "engram.gladiatorChallenge",
-        "title": "Challenge Selection (Gladiator)",
-        "category": "Engram"
+        "command": "engram.architectPlan",
+        "title": "Engram: The Architect (Plan Implementation)"
       }
     ],
-    "menus": {
-      "editor/context": [
-        {
-          "command": "engram.gladiatorChallenge",
-          "when": "editorHasSelection && config.engram.experimental.optInDuel",
-          "group": "1_modification"
-        }
-      ]
-    },
+    "keybindings": [
+      {
+        "command": "engram.acceptIntuition",
+        "key": "ctrl+shift+space",
+        "when": "editorTextFocus && config.engram.experimental.predictiveIntuition"
+      }
+    ],
+    "menus": {},
     "configuration": {
       "type": "object",
       "title": "Engram",
@@ -78,25 +76,33 @@
           "default": "breeze",
           "description": "Controls how often Engram warns you. 'Breeze' is quiet (3+ mistakes), 'Strict' is aggressive (2+ mistakes)."
         },
-        "engram.experimental.hypeMan": {
+        "engram.experimental.predictiveIntuition": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable 'Predictive Intuition' (Beta): Shows ghost text predictions when you hesitate."
+        },
+        "engram.experimental.intuitionDelay": {
+          "type": "number",
+          "default": 1200,
+          "description": "Delay (ms) before Intuition triggers. Default: 1200ms."
+        },
+        "engram.experimental.photographicMemory": {
           "type": "boolean",
           "default": false,
-          "description": "Enable 'Parasocial Hype Man' (Beta): Receive enthusiastic compliments while waiting for AI generation."
+          "description": "Enable 'Photographic Memory' (Hidden Beta): Vector-based history of file saves.",
+          "scope": "resource"
         },
-        "engram.experimental.gladiatorMode": {
+        "engram.experimental.hippocampus": {
           "type": "boolean",
           "default": false,
-          "description": "Enable 'Gladiator Arena' (Beta): Spawn two models to debate the solution."
+          "description": "Enable 'Hippocampus' (Hidden Beta): Episodic memory and auto-journaling.",
+          "scope": "resource"
         },
-        "engram.experimental.optInDuel": {
+        "engram.experimental.architect": {
           "type": "boolean",
           "default": false,
-          "description": "Enable 'Opt-In Duel' (Beta): Shows a 'Challenge' button above code blocks to trigger Gladiator critique."
-        },
-        "engram.experimental.secondaryModel": {
-          "type": "string",
-          "default": "qwen2.5:0.5b",
-          "description": "Model used for Hype Man and Gladiator Challenger."
+          "description": "Enable 'The Architect' (Hidden Beta): Graph-aware planning.",
+          "scope": "resource"
         }
       }
     }

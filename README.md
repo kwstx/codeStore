@@ -60,4 +60,18 @@ Engram is designed to be hacked.
 ## Support
 *   [Website](https://www.useengram.com/)
 *   [Repository](https://github.com/kwstx/Engram)
+*   [Repository](https://github.com/kwstx/Engram)
+
+## Experimental Features (Beta)
+**Engram isn't just a memory; it's a psychic companion.**
+
+### Predictive Intuition (Auto-Enabled)
+Engram uses local models (Ollama) to predict your next move.
+*   **What it does:** Shows ghost-text predictions when you hesitate.
+*   **How to Disable:** Go to **Settings** -> Search `Engram` -> Uncheck `Experimental: Predictive Intuition`.
+
+### Opt-In Duel
+*   **What it does:** Adds a "Challenge" button to code blocks. Click it to summon a second AI model to critique your code.
+*   **How to Disable:** Go to **Settings** -> Uncheck `Experimental: Opt In Duel`.
+
 *   [Privacy Policy](https://www.useengram.com/privacy.html)

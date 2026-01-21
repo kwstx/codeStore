@@ -13,19 +13,32 @@ export class LabsController {
         return LabsController.instance;
     }
 
-    public isHypeManEnabled(): boolean {
-        return vscode.workspace.getConfiguration('engram').get<boolean>('experimental.hypeMan', false);
+    // For testing
+    public static setInstance(mock: LabsController) {
+        LabsController.instance = mock;
     }
 
-    public isGladiatorModeEnabled(): boolean {
-        return vscode.workspace.getConfiguration('engram').get<boolean>('experimental.gladiatorMode', false);
+
+
+    public isPredictiveIntuitionEnabled(): boolean {
+        return vscode.workspace.getConfiguration('engram').get<boolean>('experimental.predictiveIntuition', false);
     }
 
-    public isOptInDuelEnabled(): boolean {
-        return vscode.workspace.getConfiguration('engram').get<boolean>('experimental.optInDuel', false);
+
+
+    public getIntuitionDelay(): number {
+        return vscode.workspace.getConfiguration('engram').get<number>('experimental.intuitionDelay', 1200);
     }
 
-    public getSecondaryModel(): string {
-        return vscode.workspace.getConfiguration('engram').get<string>('experimental.secondaryModel', 'qwen2.5:0.5b');
+    public isPhotographicMemoryEnabled(): boolean {
+        return vscode.workspace.getConfiguration('engram').get<boolean>('experimental.photographicMemory', false);
+    }
+
+    public isHippocampusEnabled(): boolean {
+        return vscode.workspace.getConfiguration('engram').get<boolean>('experimental.hippocampus', false);
+    }
+
+    public isArchitectEnabled(): boolean {
+        return vscode.workspace.getConfiguration('engram').get<boolean>('experimental.architect', false);
     }
 }
