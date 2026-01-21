@@ -34,4 +34,8 @@ export class LabsController {
     public isArchitectEnabled(): boolean {
         return vscode.workspace.getConfiguration('engram').get<boolean>('experimental.architect', false);
     }
+
+    public isPromptInjectorEnabled(): boolean {
+        return vscode.workspace.getConfiguration('engram').get<boolean>('experimental.promptInjector', false);
+    }
 }

@@ -101,7 +101,13 @@
         "engram.experimental.architect": {
           "type": "boolean",
           "default": false,
-          "description": "Enable 'The Architect' (Hidden Beta): Graph-aware planning.",
+          "description": "Enable The Architect: Graph-aware planning (Hidden Beta).",
+          "scope": "resource"
+        },
+        "engram.experimental.promptInjector": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable Prompt Injector: Type '??' to generate and copy a context-aware AI prompt (Hidden Beta).",
           "scope": "resource"
         }
       }

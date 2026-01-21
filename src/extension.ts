@@ -14,7 +14,7 @@ import { SnippetStore } from './snippetStore';
 import { MemoryCardProvider } from './ui/MemoryCardProvider';
 import { StatusBarController } from './ui/StatusBarController';
 import { LabsController } from './experimental/LabsController';
-
+import { PromptInjectorService } from './experimental/PromptInjectorService';
 import { ShadowIntuition } from './features/IntuitionService';
 import { PhotographerService } from './experimental/PhotographerService';
 import { flashbackCommand } from './experimental/FlashbackCommand';
@@ -29,7 +29,6 @@ export async function activate(context: vscode.ExtensionContext) {
     EmbeddingService.getInstance();
     ExclusionManager.getInstance().setContext(context);
 
-    // Beta: Photographic Memory
     // Beta: Photographic Memory
     PhotographerService.getInstance().initialize(context);
 
@@ -71,9 +70,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
         if (!mcpServers['engram']) {
             const serverPath = context.asAbsolutePath(path.join('server', 'dist', 'index.js'));
-
             logger.log(`Auto-configuring Engram MCP Server at: ${serverPath}`);
-
             await config.update('mcpServers', {
                 ...mcpServers,
                 "engram": {
@@ -83,7 +80,6 @@ export async function activate(context: vscode.ExtensionContext) {
                     "autoAllow": true
                 }
             }, vscode.ConfigurationTarget.Global);
-
             vscode.window.showInformationMessage("Engram MCP Server connected for Universal Protection. 🛡️");
         }
     } catch (e) {
@@ -99,7 +95,10 @@ export async function activate(context: vscode.ExtensionContext) {
     }
     detector.startListening(context);
 
-
+    // [LABS] Beta Features - Prompt Injector
+    if (LabsController.getInstance().isPromptInjectorEnabled()) {
+        PromptInjectorService.getInstance().initialize(context);
+    }
 
     // Core Feature: Predictive Intuition (Pre-Cog)
     const shadowIntuition = ShadowIntuition.getInstance();
